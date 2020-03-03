@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-args
+  namespace: default
+  labels:
+    app.kubernetes.io/name: {{ include "threatstack-agent.name" . }}
+    helm.sh/chart: {{ include "threatstack-agent.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  config-args: "{{ include "threatstack-agent.configArgs" . }}"
+  kubernetes-api-config-args: "{{ include "threatstack-agent-kubernetes-api.configArgs" . }}"

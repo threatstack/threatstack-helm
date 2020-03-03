@@ -1,0 +1,23 @@
+{{- if .Values.agentDeployKey }}
+Threat Stack agents are being deployed. After a few minutes, you should see
+agents showing up on your server tab.
+
+    https://app.threatstack.com/
+
+{{- if eq (len .Values.daemonset.nodeSelector) 0 }}
+{{- else }}
+
+The Threat Stack agent is being scheduled to nodes with the appropriate label. Make sure you have added the label to your node definitions.
+
+By default, this chart will only schedule the Threat Stack agent to nodes with a label `threatstack-agent: "true"`.
+{{- end }}
+{{- else }}
+##############################################################################
+####             ERROR: You did not set an agentDeployKey                 ####
+##############################################################################
+
+This deployment will be incomplete until you get your deploy key from Threat Stack.
+
+Once registered you can get your deploy key from within the Threat Stack Platform (https://threatstack.zendesk.com/hc/en-us/articles/207322890-View-or-Reset-Your-Organization-s-Deployment-Key).
+
+{{- end }}

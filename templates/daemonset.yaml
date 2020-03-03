@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: 
+  name: {{ include "threatstack-agent.name" .}}
+  labels:
+    app.kubernetes.io/name: {{ include "threatstack-agent.name" .}}
+    helm.sh/chart: {{ include "threatstack-agent.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector: 
+    matchLabels: 
+      app.kubernetes.io/name: {{ include "threatstack-agent.name" .}}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+  template: 
+    metadata: 
+      labels: 
+        app.kubernetes.io/name: {{ include "threatstack-agent.name" . }}
+        helm.sh/chart: {{ include "threatstack-agent.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+      name: {{ include "threatstack-agent.name" . }}
+      annotations:
+        # If configmap or secret files change, this will change the checksum annotations in the daemonset, forcing a redeploy.
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+    spec:
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- else }}
+{{- end }}
+{{- if .Values.daemonset.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.daemonset.nodeSelector | indent 8 }}
+{{- else }}
+{{- end }}
+{{- if .Values.daemonset.affinity }}
+      affinity:
+{{ toYaml .Values.daemonset.affinity | indent 8 }}
+{{- else }}
+{{- end }}
+{{- if .Values.daemonset.tolerations }}
+      tolerations:
+{{ toYaml .Values.daemonset.tolerations | indent 8 }}
+{{- else }}
+{{- end }}
+      hostNetwork: true
+      hostPID: true
+      serviceAccountName: {{ if .Values.rbac.create }}{{ include "threatstack-agent.name" . }}{{ else }}{{ .Values.rbac.serviceAccountName }}{{ end }}
+      containers: 
+      - image: {{ .Values.image.repository }}:{{ if not .Values.image.version }}{{ .Chart.AppVersion }}{{ else }}{{ .Values.image.version }}{{ end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ include "threatstack-agent.name" . }}
+{{- if eq .Values.gke true }}
+        command: ["bash"]
+        args: ["-c", "chroot /threatstackfs /bin/bash -c 'systemctl stop systemd-journald-audit.socket; systemctl mask systemd-journald-audit.socket; systemctl restart systemd-journald; auditctl --backlog_wait_time 0'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd"]
+{{- else }}
+{{- end }}
+{{- if .Values.daemonset.livenessProbe }}
+        livenessProbe:
+{{ toYaml .Values.daemonset.livenessProbe | indent 10 }}
+{{- else }}
+        livenessProbe:
+          exec:
+            command: [ "sh", "-c", "tsagent status" ]
+          initialDelaySeconds: 15
+          periodSeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+{{- end }}
+        env: 
+          - name: THREATSTACK_SETUP_ARGS
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "threatstack-agent.fullname" . }}
+                key: ts-setup-args
+          - name: THREATSTACK_CONFIG_ARGS
+            valueFrom:
+              configMapKeyRef:
+                name: config-args
+                key: config-args
+        securityContext: 
+          privileged: false
+          capabilities: 
+            add: {{ .Values.capabilities | trim }}
+{{- if .Values.daemonset.resources }}
+        resources:
+{{ toYaml .Values.daemonset.resources | trim | indent 10 }}
+{{- else }}
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+{{- end }}
+        volumeMounts:
+          - name: dockersocket
+            mountPath: /var/run/docker.sock
+          - name: hostfs
+            mountPath: /threatstackfs
+          - name: containerdsocket
+            mountPath: /run/containerd/containerd.sock
+          - name: oldcontainerdsocket
+            mountPath: /var/run/docker/containerd/docker-containerd.sock
+      volumes:
+        - hostPath:
+            path: /var/run/docker.sock
+          name: dockersocket
+        - hostPath:
+            path: /run/containerd/containerd.sock
+          name: containerdsocket
+        - hostPath:
+            path: /var/run/docker/containerd/docker-containerd.sock
+          name: oldcontainerdsocket
+        - hostPath:
+            path: /
+          name: hostfs

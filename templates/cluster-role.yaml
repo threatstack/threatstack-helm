@@ -1,0 +1,31 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: 
+  name: {{ include "threatstack-agent.name" .}}
+  labels:
+    app.kubernetes.io/name: {{ include "threatstack-agent.name" . }}
+    helm.sh/chart: {{ include "threatstack-agent.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules: 
+- apiGroups: 
+  - ""
+  resources: 
+  - events
+  - namespaces
+  - pods
+  verbs: 
+  - get
+  - list
+  - watch
+- apiGroups: 
+  - "rbac.authorization.k8s.io"
+  resources: 
+  - clusterroles
+  - clusterrolebindings
+  - roles
+  - rolebindings
+  verbs: 
+  - get
+  - list
+  - watch

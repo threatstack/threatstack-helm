@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "threatstack-agent.name" .}}-kubernetes-api
+  labels:
+    app.kubernetes.io/name: {{ include "threatstack-agent.name" .}}-kubernetes-api
+    helm.sh/chart: {{ include "threatstack-agent.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "threatstack-agent.name" .}}-kubernetes-api
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "threatstack-agent.name" . }}-kubernetes-api
+        helm.sh/chart: {{ include "threatstack-agent.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+      name: {{ include "threatstack-agent.name" .}}-kubernetes-api
+      annotations:
+        # If configmap or secret files change, this will change the checksum annotations in the deployment, forcing a redeploy.
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+    spec:
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- else }}
+{{- end }}
+{{- if .Values.apiReader.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.apiReader.nodeSelector | trim | indent 8 }}
+{{- else }}
+{{- end }}
+{{- if .Values.apiReader.affinity }}
+      affinity:
+{{ toYaml .Values.apiReader.affinity | indent 8 }}
+{{- else }}
+{{- end }}
+{{- if .Values.apiReader.tolerations }}
+      tolerations:
+{{ toYaml .Values.apiReader.tolerations | indent 8 }}
+{{- else }}
+{{- end }}
+      hostNetwork: true
+      hostPID: true
+      serviceAccountName: {{ if .Values.rbac.create }}{{ include "threatstack-agent.name" . }}{{ else }}{{ .Values.rbac.serviceAccountName }}{{ end }}
+      containers:
+      - image: {{ .Values.image.repository }}:{{ if not .Values.image.version }}{{ .Chart.AppVersion }}{{ else }}{{ .Values.image.version }}{{ end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ include "threatstack-agent.name" . }}
+{{- if .Values.apiReader.livenessProbe }}
+        livenessProbe:
+{{ toYaml .Values.apiReader.livenessProbe | indent 10 }}
+{{- else }}
+        livenessProbe:
+          exec:
+            command: [ "sh", "-c", "tsagent status" ]
+          initialDelaySeconds: 15
+          periodSeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+{{- end }}
+        env:
+          - name: THREATSTACK_SETUP_ARGS
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "threatstack-agent.fullname" . }}
+                key: ts-setup-args
+          - name: THREATSTACK_CONFIG_ARGS
+            valueFrom:
+              configMapKeyRef:
+                name: config-args
+                key: kubernetes-api-config-args
+        securityContext: 
+          privileged: false
+          capabilities: 
+            add: {{ .Values.capabilities | trim }}
+{{- if .Values.apiReader.resources }}
+        resources:
+{{ toYaml .Values.apiReader.resources | trim | indent 10 }}
+{{- else }}
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+{{- end }}
+        volumeMounts: 
+          - name: dockersocket
+            mountPath: /var/run/docker.sock
+          - name: hostfs
+            mountPath: /threatstackfs
+      volumes: 
+        - hostPath: 
+            path: /var/run/docker.sock
+          name: dockersocket
+        - hostPath: 
+            path: /
+          name: hostfs

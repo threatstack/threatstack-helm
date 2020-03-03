@@ -1,0 +1,140 @@
+### Overriding default helm chart/kubernetes object names
+nameOverride: ""
+fullnameOverride: ""
+imagePullSecrets: []
+
+# Set this to true if running on GKE
+gke: false
+
+### Default values for threatstack-agent chart
+image:
+  repository: threatstack/ts-docker2
+  version: ""
+  pullPolicy: Always
+
+### RBAC and namespacing settings for release
+# create              :: If `true`, the chart will generate a service account
+# namespace           :: Override namespace to deploy this chart, as desired
+# serviceAccountName  :: If `rbac.create` is set to `false`, use this as the service account name 
+rbac:
+  create: true
+  namespace: "default"
+  serviceAccountName: "threatstack-agent"
+
+### Threat Stack Agent settings
+#
+# rulesets              :: Define what rules will be applied to the agent by default
+# additionalSetupConfig :: Additional parameters passed to the backend during initial agent registration
+# additionalConfig      :: Additional parameters to configure the running agent
+# capabilities          :: Docker capabilites required for the proper operation of the agent
+rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
+additionalSetupConfig: ""
+
+additionalConfig: "log.level info"
+
+capabilities: |
+  ["AUDIT_CONTROL", "AUDIT_READ", "SYS_CHROOT", "CHOWN","DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "SETGID", "SETUID", "SYS_ADMIN", "SYS_PTRACE"]
+
+#####
+# WARNING!
+#
+# Do not store the deploy key in a source control system!
+# Pass this in via an addditional values yaml file when installing this helm chart
+# Example: `helm install --name threatstack-agent -f values.yaml -f overriding-deploy-key.yaml threatstack-agent`
+#####
+agentDeployKey: ""
+
+########
+#
+# API Server reader Deployment settings
+#
+# This section configures a single-instance ReplicaSet threatstack-agent pod
+#
+# The pod makes requests to kubernetes api-server to retrieve information
+# on the state of the cluster.
+#
+# NOTE: This pod DOES NOT monitor its node activity.
+#
+########
+apiReader:
+  # Override the agent's liveness probe logic from the default:
+  # In case of issues with the probe, you can disable it with the
+  # following values, to allow easier investigating:
+  #
+  #  livenessProbe:
+  #    exec:
+  #      command: ["/bin/true"]
+
+  # The below values are suggestions. Individual workloads may vary
+  #   and require higher or lower resource requirements. It is
+  #   highly recommended to validate these settings in the target
+  #   environment, and adjust to achieve desired performance.
+  #
+  # Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  #
+  #  resources:
+  #    requests:
+  #      memory: "256Mi"
+  #      cpu: "200m"
+  #    limits:
+  #      memory: "256Mi"
+  #      cpu: "200m"
+
+  # Override kubernetes api reader agent's default target nodes
+  # Default is any node within the target namespace
+  #
+  # Set these as desired to only install the kubernetes api reader agent on
+  # one of a subset of your kubernetes nodes
+  nodeSelector: {}
+    # foo: bar
+  # Optional
+  affinity: {}
+  # Optional
+  tolerations: []
+
+########
+#
+# Threat Stack Agent Daemonset settings
+#
+# This section configures a daemonset of threatstack-agent pods
+# 
+# The pods monitor the activity of other pods/deployments on
+# the node.
+#
+########
+daemonset:
+  # Override the agent's liveness probe logic from the default:
+  # In case of issues with the probe, you can disable it with the
+  # following values, to allow easier investigating:
+  #
+  #  livenessProbe:
+  #    exec:
+  #      command: ["/bin/true"]
+
+  # The below values are suggestions. Individual workloads may vary
+  #   and require higher or lower resource requirements. It is
+  #   highly recommended to validate these settings in the target
+  #   environment, and adjust to achieve desired performance.
+  #
+  # Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  #
+  #
+  #  resources:
+  #    requests:
+  #      memory: "256Mi"
+  #      cpu: "200m"
+  #    limits:
+  #      memory: "256Mi"
+  #      cpu: "200m"
+
+  # Override agent's default target nodes
+  # Default is to only deploy on nodes that have the label `threatstack-agent=true`
+  #
+  # Set these as desired to only install agent on a subset of your kubernetes nodes,
+  # or to {} to deploy to all nodes in the target namespace
+  nodeSelector:
+    threatstack-agent: "true"
+  # Optional
+  affinity: {}
+  # Optional
+  tolerations: []
