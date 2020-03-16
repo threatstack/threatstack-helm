@@ -98,7 +98,12 @@ The following values settings for the helm chart are important to note, or expec
 
 * `image.repository`      :: The docker repository for the container image to install. It defaults to Threat Stack's offical docker hub repository for the agent. **NOTE:** Changing this could lead to pulling an unofficial or incorrect image, and is strongly discouraged.
 * `image.version`         :: The docker tag for the container image to install. It defaults to Threat Stack's latest offical docker image version for the agent at the time the chart was released. **NOTE:** Changing this could lead to pulling an unofficial or incorrect image, and is strongly discouraged.
-* `gke`           :: If `true`, the Daemonset definition will be modified to execute GKE-specific commands for the agent to work correctly there. Defaults to `false`
+* `gkeContainerOs`        :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with ContainerOS nodes. Defaults to `false`
+* `gkeUbuntu`             :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with Ubuntu nodes. Defaults to `false`
+* `customDaemonsetCmd`    :: Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset.
+>>>
+**Warning:** Setting `customDaemonsetCmd` improperly can result in the Threat Stack agent not running correctly
+>>>
 * `rbac.create`           :: If `true`, will create the needed service account to run. If false, the chart will leverage the service account defined in `rbac.serviceAccountName`
 * `imagePullSecrets`      :: If pulling the agent from a private/internal docker registry that requires credentials, you will need to add the name of your docker credentials secret to this array. *This secret needs to be defined outside of installing this helm chart.* Defaults to an empty array which will only work with public registries.
     * For more guidance with using private container registries, please review the following kubernetes documentation for details around how to set this upcorrectly with your registry service:
