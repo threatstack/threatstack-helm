@@ -50,24 +50,24 @@ The threatstack agent helm chart follows the standard installation process for c
 
 1. Add the threatstack agent helm repository (URL: https://pkg.threatstack.com/helm) to your local helm configuration
    ```shell
-   > helm repo add https://pkg.threatstack.com/helm
+   > helm repo add threatstack https://pkg.threatstack.com/helm
    ```
 1. Using the default `values.yaml`, create a local yaml that overrides the configuration as desired or needed for the target cluster (See [Additional Installation Notes][#additional-installation-notes] below)
 1. Install the threatstack agent with helm
     * `Helm 2:`
    ```shell
-   > helm install --name <HELM_RELEASE_NAME> --repo https://pkg.threatstack.com/helm --values ./<values-override-filename>.yaml threatstack-agent
+   > helm install --name <HELM_RELEASE_NAME> --values ./<values-override-filename>.yaml threatstack/threatstack-agent
    ```
     * `Helm 3:`
    ```shell
-   > helm install <HELM_RELEASE_NAME> --repo https://pkg.threatstack.com/helm --values ./<values-override-filename>.yaml threatstack-agent
+   > helm install <HELM_RELEASE_NAME> --values ./<values-override-filename>.yaml threatstack/threatstack-agent
    ```
 
 #### Updating the chart
 
 After making changes, run:
 
-helm upgrade <HELM_RELEASE_NAME> threatstack-agent
+helm upgrade <HELM_RELEASE_NAME> threatstack/threatstack-agent
 
 #### Uninstalling the chart
 
@@ -90,7 +90,7 @@ Since helm allows for multiple override files to be supplied to a single `helm i
 
 Assuming you override the default values to match our environment in a `values.yaml` file, and separately override the deploy key setting in a file named `deploykey-override.yaml`, an example `helm install` command would look like:
 
-> helm install --name my-threatstack-agents --repo https://pkg.threatstack.com/helm --values values.yaml --values deploykey-override.yaml threatstack-agent
+> helm install --name my-threatstack-agents --values values.yaml --values deploykey-override.yaml threatstack/threatstack-agent
 
 #### Important Configuration Settings
 
