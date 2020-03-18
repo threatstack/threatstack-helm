@@ -65,7 +65,7 @@ spec:
         livenessProbe:
 {{ toYaml .Values.daemonset.livenessProbe | indent 10 }}
 {{- end }}
-{{- if or ((eq .Values.gkeContainerOs false) (eq .Values.gkeUbuntu false)) }}
+{{- if or (eq .Values.gkeContainerOs false) (eq .Values.gkeUbuntu false) }}
         livenessProbe:
           exec:
             command: [ "sh", "-c", "tsagent status" ]
