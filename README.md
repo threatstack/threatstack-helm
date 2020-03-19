@@ -50,24 +50,24 @@ The threatstack agent helm chart follows the standard installation process for c
 
 1. Add the threatstack agent helm repository (URL: https://pkg.threatstack.com/helm) to your local helm configuration
    ```shell
-   > helm repo add https://pkg.threatstack.com/helm
+   > helm repo add threatstack https://pkg.threatstack.com/helm
    ```
 1. Using the default `values.yaml`, create a local yaml that overrides the configuration as desired or needed for the target cluster (See [Additional Installation Notes][#additional-installation-notes] below)
 1. Install the threatstack agent with helm
     * `Helm 2:`
    ```shell
-   > helm install --name <HELM_RELEASE_NAME> --repo https://pkg.threatstack.com/helm --values ./<values-override-filename>.yaml threatstack-agent
+   > helm install --name <HELM_RELEASE_NAME> --values ./<values-override-filename>.yaml threatstack/threatstack-agent
    ```
     * `Helm 3:`
    ```shell
-   > helm install <HELM_RELEASE_NAME> --repo https://pkg.threatstack.com/helm --values ./<values-override-filename>.yaml threatstack-agent
+   > helm install <HELM_RELEASE_NAME> --values ./<values-override-filename>.yaml threatstack/threatstack-agent
    ```
 
 #### Updating the chart
 
 After making changes, run:
 
-helm upgrade <HELM_RELEASE_NAME> threatstack-agent
+helm upgrade <HELM_RELEASE_NAME> threatstack/threatstack-agent
 
 #### Uninstalling the chart
 
@@ -90,7 +90,7 @@ Since helm allows for multiple override files to be supplied to a single `helm i
 
 Assuming you override the default values to match our environment in a `values.yaml` file, and separately override the deploy key setting in a file named `deploykey-override.yaml`, an example `helm install` command would look like:
 
-> helm install --name my-threatstack-agents --repo https://pkg.threatstack.com/helm --values values.yaml --values deploykey-override.yaml threatstack-agent
+> helm install --name my-threatstack-agents --values values.yaml --values deploykey-override.yaml threatstack/threatstack-agent
 
 #### Important Configuration Settings
 
@@ -98,7 +98,12 @@ The following values settings for the helm chart are important to note, or expec
 
 * `image.repository`      :: The docker repository for the container image to install. It defaults to Threat Stack's offical docker hub repository for the agent. **NOTE:** Changing this could lead to pulling an unofficial or incorrect image, and is strongly discouraged.
 * `image.version`         :: The docker tag for the container image to install. It defaults to Threat Stack's latest offical docker image version for the agent at the time the chart was released. **NOTE:** Changing this could lead to pulling an unofficial or incorrect image, and is strongly discouraged.
-* `gke`           :: If `true`, the Daemonset definition will be modified to execute GKE-specific commands for the agent to work correctly there. Defaults to `false`
+* `gkeContainerOs`        :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with ContainerOS nodes. Defaults to `false`
+* `gkeUbuntu`             :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with Ubuntu nodes. Defaults to `false`
+* `customDaemonsetCmd`    :: Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset.
+>>>
+**Warning:** Setting `customDaemonsetCmd` improperly can result in the Threat Stack agent not running correctly
+>>>
 * `rbac.create`           :: If `true`, will create the needed service account to run. If false, the chart will leverage the service account defined in `rbac.serviceAccountName`
 * `imagePullSecrets`      :: If pulling the agent from a private/internal docker registry that requires credentials, you will need to add the name of your docker credentials secret to this array. *This secret needs to be defined outside of installing this helm chart.* Defaults to an empty array which will only work with public registries.
     * For more guidance with using private container registries, please review the following kubernetes documentation for details around how to set this upcorrectly with your registry service:
