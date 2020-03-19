@@ -31,11 +31,9 @@ image:
 
 ### RBAC and namespacing settings for release
 # create              :: If `true`, the chart will generate a service account
-# namespace           :: Override namespace to deploy this chart, as desired
 # serviceAccountName  :: If `rbac.create` is set to `false`, use this as the service account name 
 rbac:
   create: true
-  namespace: "default"
   serviceAccountName: "threatstack-agent"
 
 ### Threat Stack Agent settings
