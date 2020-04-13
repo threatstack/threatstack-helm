@@ -143,12 +143,11 @@ daemonset:
   #      cpu: "200m"
 
   # Override agent's default target nodes
-  # Default is to only deploy on nodes that have the label `threatstack-agent=true`
+  # Default is all nodes within the target namespace
   #
-  # Set these as desired to only install agent on a subset of your kubernetes nodes,
-  # or to {} to deploy to all nodes in the target namespace
-  nodeSelector:
-    threatstack-agent: "true"
+  # Set these as desired to only install agent on a subset of your kubernetes nodes.
+  nodeSelector: {}
+    # threatstack-agent: "true"
   # Optional
   affinity: {}
   # Optional

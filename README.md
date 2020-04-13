@@ -24,7 +24,7 @@ The following kubernetes objects are created:
   * clusterrolebindings
   * roles
   * rolebindings
-* A daemonset that installs the threatstack agent container on each node (1 container per node). It defaults to only deploying on nodes where a label `threatstack-agent` is set to `true` (this can be overridden via a `values.yaml`).
+* A daemonset that installs the threatstack agent container on each node (1 container per node). It defaults to deploying on all nodes (this can be overridden via a `values.yaml`).
 * A replicaset to deploy a specially configured threatstack-agent container that communicates with the kubernetes control plane.
 * A Secret to store [sensitive agent configuration](#additional-installation-notes)
 * A ConfigMap will be created to store the Threat Stack agent's setup and runtime configuration options.
