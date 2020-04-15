@@ -68,11 +68,15 @@ The threatstack agent helm chart follows the standard installation process for c
 
 After making changes, run:
 
-helm upgrade <HELM_RELEASE_NAME> threatstack/threatstack-agent
+```shell
+> helm upgrade <HELM_RELEASE_NAME> threatstack/threatstack-agent
+```
 
 #### Uninstalling the chart
 
-helm delete <HELM_RELEASE_NAME>
+```shell
+> helm delete <HELM_RELEASE_NAME>
+```
 
 #### Additional Installation Notes
 
@@ -89,7 +93,9 @@ Since helm allows for multiple override files to be supplied to a single `helm i
 
 Assuming you override the default values to match our environment in a `values.yaml` file, and separately override the deploy key setting in a file named `deploykey-override.yaml`, an example `helm install` command would look like:
 
+```shell
 > helm install --name my-threatstack-agents --values values.yaml --values deploykey-override.yaml threatstack/threatstack-agent
+```
 
 > **NOTE:** Most of the overridable values for the threatstack agent helm chart are **not** sensitive, and therefore can (and should) be checked into a source control system.
 
