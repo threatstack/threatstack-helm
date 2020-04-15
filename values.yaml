@@ -64,7 +64,7 @@ agentDeployKey: ""
 #####
 # Alterntatively, define your own secret, and put the secret's name/key in the child values
 #
-# NOTE: If the `agentSetupSecretRef` secret is changed outside of this chart, you should upgrade with
+# NOTE: If the `agentSetupExternalSecretRef` secret is changed outside of this chart, you should upgrade with
 #       the `cecksum` set to a new value  to force a redployment of the api-reader and daemonset.
 #
 #       FAILURE TO DO SO COULD CAUSE THE AGENT TO BE UNABLE TO AUTHENTICATE WITH THE THREATSTACK PLATFORM.
