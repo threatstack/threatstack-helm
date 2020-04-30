@@ -107,9 +107,8 @@ An alternative to having the chart define the `ts-setup-args` secret itself, you
 
 * `agentSetupExternalSecretRef.name`      :: This is the name of your self-managed secret.
 * `agentSetupExternalSecretRef.key`       :: This is the key in your self-managed secret that is associated with the data you want to supply from the secret, to the Threat Stack agent setup registration.
-* `agentSetupExternalSecretRef.checksum`  :: This value should be set anytime the secret, the key in the secret, or the data referenced by changes, *including the data within the secret itself*. This will force the api-reader deployment and the daemonset to redeploy, which is necessary to ensure any changes in the setup are reflected. This includes changing the Threat Stack deploy key.
 
-Using the `agentSetupExternalSecretRef` block will cause the chart to ignore the `agentDeployKey`, `rulesets`, and `additionalSetupConfig` values defined in `values.yaml` or any other values override file.
+Using the `agentSetupExternalSecretRef` block will cause the chart to ignore the `agentDeployKey`, `rulesets`, and `additionalSetupConfig` values defined in `values.yaml` or any other values override file, until existing pods are terminated/rescheduled.
 
 The value defined in the secret by `agentSetupExternalSecretRef.name`/`agentSetupExternalSecretRef.key` should be defined as in the example below to properly setup up the agent. Failure to do so can cause the agent to not properly register itself with the Threat Stack platform.
 
