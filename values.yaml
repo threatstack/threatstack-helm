@@ -55,9 +55,20 @@ capabilities: |
 #
 # Do not store the deploy key in a source control system!
 # Pass this in via an addditional values yaml file when installing this helm chart
+#
 # Example: `helm install --name threatstack-agent -f values.yaml -f overriding-deploy-key.yaml threatstack-agent`
+#
 #####
 agentDeployKey: ""
+
+#####
+#
+# Alterntatively, define your own secret, and put the secret's name/key in the child values
+#
+######
+agentSetupExternalSecretRef: {}
+  # name: ""
+  # key: ""
 
 ########
 #
