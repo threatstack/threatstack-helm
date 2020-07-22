@@ -28,6 +28,7 @@ The following kubernetes objects are created when the chart is installed:
 * A replicaset to deploy a specially configured threatstack-agent container that communicates with the kubernetes control plane.
 * A Secret to store [sensitive agent configuration](#additional-installation-notes), unless you [define your own secret](#using-the-agentsetupexternalsecretref-value-block)
 * A ConfigMap will be created to store the Threat Stack agent's setup and runtime configuration options.
+* Optionally a Pod Security Policy for clusters with strict pod admission control requirements.
 
 ### Installation
 
@@ -37,7 +38,7 @@ These instructions assume that you already have helm (and the server-side compon
 
 #### Local Installation
 
-The instructions below assume the helm chart has been released to a repository. Alternatively, you can clone this git repository and run `helm package .` in the repository's root to get a `.tgz` file built locally. 
+The instructions below assume the helm chart has been released to a repository. Alternatively, you can clone this git repository and run `helm package .` in the repository's root to get a `.tgz` file built locally.
 
 In this, one should not add the helm repository as directed below (step 1), and omit the `--repo https://pkg.threatstack.com/helm` from any command. Also, instead of the chart name being `threatstack-agent`, you should use `<PATH_TO_CHART>/threatstack-agent-<VERSION>.tgz` in helm commands.
 
@@ -137,6 +138,8 @@ The following values settings for the helm chart are important to note, or expec
 * `rulesets`              :: The list of Threat Stack rulesets that the againt container should run with. The single-quotes in the double-quotes are intentional and not optional.
 * `additionalSetupConfig` :: A list of command line arguments used when the agent container registers itself with the Threat Stack platform. See official documentation for details.
 * `additionalConfig`      :: A list of command line arguments used when the agent container starts running. See official documentation for details.
+* `podSecurityPolicyEnabled` :: If `true`, will create a pod security policy and configure the cluster role rules with that policy.
+* `daemonset.priorityClassName` :: Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart.
 
 ### Contributing enhancements/fixes
 
