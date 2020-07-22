@@ -70,6 +70,14 @@ agentSetupExternalSecretRef: {}
   # name: ""
   # key: ""
 
+#####
+#
+# Deploy Threat Stack with the Pod Security Policy for clusters with
+# strict admission control requirements.
+#
+#####
+podSecurityPolicyEnabled: false
+
 ########
 #
 # API Server reader Deployment settings
@@ -163,3 +171,7 @@ daemonset:
   affinity: {}
   # Optional
   tolerations: []
+
+  # Optional
+  # Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+  priorityClassName: ""

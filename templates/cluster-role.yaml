@@ -29,3 +29,13 @@ rules:
   - get
   - list
   - watch
+{{ if .Values.podSecurityPolicyEnabled -}}
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+  resourceNames:
+  - {{ include "threatstack-agent.name" .}}-psp
+{{- end }}
