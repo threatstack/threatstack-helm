@@ -43,6 +43,9 @@ spec:
 {{ toYaml .Values.daemonset.tolerations | indent 8 }}
 {{- else }}
 {{- end }}
+{{- if .Values.daemonset.priorityClassName }}
+      priorityClassName: {{ .Values.daemonset.priorityClassName }}
+{{- end }}
       hostNetwork: true
       hostPID: true
       serviceAccountName: {{ if .Values.rbac.create }}{{ include "threatstack-agent.name" . }}{{ else }}{{ .Values.rbac.serviceAccountName }}{{ end }}
@@ -62,8 +65,7 @@ spec:
 {{- if .Values.daemonset.livenessProbe }}
         livenessProbe:
 {{ toYaml .Values.daemonset.livenessProbe | indent 10 }}
-{{- end }}
-{{- if and (eq .Values.gkeContainerOs false) (eq .Values.gkeUbuntu false) }}
+{{- else if and (eq .Values.gkeContainerOs false) (eq .Values.gkeUbuntu false) }}
         livenessProbe:
           exec:
             command: [ "sh", "-c", "tsagent status" ]
@@ -88,7 +90,7 @@ spec:
           - name: THREATSTACK_CONFIG_ARGS
             valueFrom:
               configMapKeyRef:
-                name: config-args
+                name: {{ include "threatstack-agent.name" . }}-config-args
                 key: config-args
         securityContext: 
           privileged: false

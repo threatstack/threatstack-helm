@@ -79,7 +79,7 @@ spec:
           - name: THREATSTACK_CONFIG_ARGS
             valueFrom:
               configMapKeyRef:
-                name: config-args
+                name: {{ include "threatstack-agent.name" . }}-config-args
                 key: kubernetes-api-config-args
         securityContext: 
           privileged: false
