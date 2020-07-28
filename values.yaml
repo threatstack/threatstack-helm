@@ -112,7 +112,7 @@ apiReader:
   #      cpu: "200m"
   #    limits:
   #      memory: "512Mi"
-  #      cpu: "200m"
+  #      cpu: "400m"
 
   # Override kubernetes api reader agent's default target nodes
   # Default is any node within the target namespace
@@ -159,7 +159,7 @@ daemonset:
   #      cpu: "200m"
   #    limits:
   #      memory: "512Mi"
-  #      cpu: "200m"
+  #      cpu: "400m"
 
   # Override agent's default target nodes
   # Default is all nodes within the target namespace
