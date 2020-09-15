@@ -7,7 +7,7 @@ metadata:
     helm.sh/chart: {{ include "threatstack-agent.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-spec: 
+spec:
   replicas: 1
   selector:
     matchLabels:
@@ -81,9 +81,9 @@ spec:
               configMapKeyRef:
                 name: {{ include "threatstack-agent.name" . }}-config-args
                 key: kubernetes-api-config-args
-        securityContext: 
+        securityContext:
           privileged: false
-          capabilities: 
+          capabilities:
             add: {{ .Values.capabilities | trim }}
 {{- if .Values.apiReader.resources }}
         resources:
@@ -97,15 +97,15 @@ spec:
             memory: "512Mi"
             cpu: "400m"
 {{- end }}
-        volumeMounts: 
+        volumeMounts:
           - name: dockersocket
             mountPath: /var/run/docker.sock
           - name: hostfs
             mountPath: /threatstackfs
-      volumes: 
-        - hostPath: 
-            path: /var/run/docker.sock
+      volumes:
+        - hostPath:
+            path: {{ .Values.daemonset.volumes.dockersocket.hostPath }}
           name: dockersocket
-        - hostPath: 
+        - hostPath:
             path: /
           name: hostfs
