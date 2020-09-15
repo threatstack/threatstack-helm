@@ -30,27 +30,3 @@ Create chart name and version as used by the chart label.
 {{- define "threatstack-agent.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-
-{{/*
-Construct the configuration arguments for the Threat Stack Agent container
-*/}}
-{{- define "threatstack-agent.configArgs" -}}
-{{- $defaultConfigArgs := "enable_kubes 1 enable_containers 1" -}}
-{{- if .Values.additionalConfig -}}
-{{- printf "%s %s" $defaultConfigArgs .Values.additionalConfig -}}
-{{- else -}}
-{{- printf "%s" $defaultConfigArgs -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Construct the configuration arguments for the Threat Stack Agent api reader container
-*/}}
-{{- define "threatstack-agent-kubernetes-api.configArgs" -}}
-{{- $defaultConfigArgs := "enable_kubes 1 enable_kubes_master 1 enable_containers 1" -}}
-{{- if .Values.additionalConfig -}}
-{{- printf "%s %s" $defaultConfigArgs .Values.additionalConfig -}}
-{{- else -}}
-{{- printf "%s" $defaultConfigArgs -}}
-{{- end -}}
-{{- end -}}
