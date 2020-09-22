@@ -56,6 +56,9 @@ capabilities: |
 #####
 agentDeployKey: ""
 
+rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
+additionalSetupConfig: ""
+
 #####
 #
 # Alterntatively, define your own secret, and put the secret's name/key in the child values
@@ -86,12 +89,7 @@ podSecurityPolicyEnabled: false
 #
 ########
 apiReader:
-  enableDocker: true
-  enableContainerd: false
-
-  rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
-  setupConfig: ""
-  runtimeConfig: "log.level info"
+  additionalRuntimeConfig: "log.level info"
 
   # Override the agent's liveness probe logic from the default:
   # In case of issues with the probe, you can disable it with the
@@ -142,8 +140,6 @@ daemonset:
   enableDocker: true
   enableContainerd: false
 
-  rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
-  additionalSetupConfig: ""
   additionalRuntimeConfig: "log.level info"
   # Override the agent's liveness probe logic from the default:
   # In case of issues with the probe, you can disable it with the

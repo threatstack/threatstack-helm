@@ -97,15 +97,3 @@ spec:
             memory: "512Mi"
             cpu: "400m"
 {{- end }}
-        volumeMounts: 
-          - name: dockersocket
-            mountPath: /var/run/docker.sock
-          - name: hostfs
-            mountPath: /threatstackfs
-      volumes: 
-        - hostPath: 
-            path: /var/run/docker.sock
-          name: dockersocket
-        - hostPath: 
-            path: /
-          name: hostfs
