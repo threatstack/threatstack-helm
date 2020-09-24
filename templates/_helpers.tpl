@@ -30,3 +30,21 @@ Create chart name and version as used by the chart label.
 {{- define "threatstack-agent.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Return runtime config if docker enabled
+*/}}
+{{- define "threatstack-agent.docker-config" -}}
+{{- if .Values.daemonset.enableDocker -}}
+{{- printf "container_runtimes.docker.enabled￼true container_runtimes.docker.kubernetes_enabled true" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return runtime config if containerd enabled
+*/}}
+{{- define "threatstack-agent.containerd-config" -}}
+{{- if .Values.daemonset.enableDocker -}}
+{{- printf "container_runtimes.containerd.enabled true container_runtimes.containerd.kubernetes_enabled true" -}}
+{{- end -}}
+{{- end -}}
