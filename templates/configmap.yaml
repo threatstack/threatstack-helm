@@ -8,5 +8,5 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  config-args: "{{ include "threatstack-agent.docker-config" }} {{ include "threatstack-agent.containerd-config" }} {{ .Values.daemonset.additionalRuntimeConfig}}"
+  config-args: "{{ include "threatstack-agent.docker-config" . }} {{ include "threatstack-agent.containerd-config" . }} {{ .Values.daemonset.additionalRuntimeConfig}}"
   kubernetes-api-config-args: "enable_kubes_master 1 {{ .Values.apiReader.additionalRuntimeConfig}}"
