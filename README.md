@@ -143,7 +143,7 @@ The following values settings for the helm chart are important to note, or expec
 
 ### Contributing enhancements/fixes
 
-Please fork this repository and submit any changes with a pull request.
+See the [CONTRIBUTING document](CONTRIBUTING.md) for details.
 
 ### Licensing
 
