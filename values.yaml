@@ -140,14 +140,6 @@ daemonset:
   enableDocker: true
   enableContainerd: false
 
-  volumes:
-    dockersocket:
-      hostPath: "/var/run/docker.sock"
-    containerdsocket:
-      hostPath: "/run/containerd/containerd.sock"
-    oldcontainerdsocket:
-      hostPath: "/var/run/docker/containerd/docker-containerd.sock"
-
   additionalRuntimeConfig: "log.level info"
   # Override the agent's liveness probe logic from the default:
   # In case of issues with the probe, you can disable it with the
