@@ -36,7 +36,7 @@ Return runtime config if docker enabled
 */}}
 {{- define "threatstack-agent.docker-config" -}}
 {{- if .Values.daemonset.enableDocker -}}
-{{- default "container_runtimes.docker.enabled￼true container_runtimes.docker.kubernetes_enabled true" -}}
+{{- default "container_runtimes.docker.enabled true container_runtimes.docker.kubernetes_enabled true" -}}
 {{- end -}}
 {{- end -}}
 
