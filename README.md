@@ -137,7 +137,7 @@ The following values settings for the helm chart are important to note, or expec
         * https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry
 * `rulesets`              :: The list of Threat Stack rulesets that the againt container should run with. The single-quotes in the double-quotes are intentional and not optional.
 * `additionalSetupConfig` :: A list of command line arguments used when the agent container registers itself with the Threat Stack platform. See official documentation for details.
-* `additionalConfig`      :: **(Deprecated)**  This parameter has been replaced with `additionalRuntimeConfig`, which allows you to define configuration separately for the daemonset and the api-reader deployment with:
+* `additionalConfig`      :: **(No longer supported)**  This parameter has been replaced with `additionalRuntimeConfig`, which allows you to define configuration separately for the daemonset and the api-reader deployment with:
     * `daemonset.additionalRuntimeConfig` :: Additional runtime configuration for the daemonset agents
     * `apiReader.additionalRuntimeConfig` :: Additional runtime configuration for the api-reader deployment agent
 * `podSecurityPolicyEnabled` :: If `true`, will create a pod security policy and configure the cluster role rules with that policy.
