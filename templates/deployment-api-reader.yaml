@@ -97,3 +97,10 @@ spec:
             memory: "512Mi"
             cpu: "400m"
 {{- end }}
+        volumeMounts:
+          - name: hostfs
+            mountPath: /threatstackfs
+      volumes:
+        - hostPath:
+            path: /
+          name: hostfs
