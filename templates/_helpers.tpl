@@ -44,7 +44,7 @@ Return runtime config if docker enabled
 Return runtime config if containerd enabled
 */}}
 {{- define "threatstack-agent.containerd-config" -}}
-{{- if .Values.daemonset.enableDocker -}}
+{{- if .Values.daemonset.enableContainerd -}}
 {{- printf "container_runtimes.containerd.enabled true container_runtimes.containerd.kubernetes_enabled true" -}}
 {{- end -}}
 {{- end -}}
