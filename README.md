@@ -141,6 +141,21 @@ The following values settings for the helm chart are important to note, or expec
 * `podSecurityPolicyEnabled` :: If `true`, will create a pod security policy and configure the cluster role rules with that policy.
 * `daemonset.priorityClassName` :: Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart.
 
+#### Overriding Container Daemon Socket Paths
+
+There are three paths that get mounted into the container agent. They point to the default paths if not overridden. You can now override where to get these mounts from the underlying host with the following configuration:
+
+* `daemonset.volumes.dockersocket.hostPath` :: Path to docker daemon's socket
+* `daemonset.volumes.containerdsocket.hostPath` :: Path to containerd daemon's socket
+* `daemonset.volumes.oldcontainerdsocket.hostPath` :: Path to older containerd daemon's socket
+
+#### Adding annotations to the Daemonset Pods
+
+The following value can be configured as a map to add custom pod annotations (key/value pairs) to the agent daemonset.
+
+* `daemonset.podAnnotations` :: Defaults to an empty hash
+
+
 ### Contributing enhancements/fixes
 
 Please fork this repository and submit any changes with a pull request.
