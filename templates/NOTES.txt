@@ -1,4 +1,4 @@
-{{- if .Values.agentDeployKey }}
+{{- if or (.Values.agentDeployKey) (gt (len .Values.agentSetupExternalSecretRef) 0) }}
 Threat Stack agents are being deployed. After a few minutes, you should see
 agents showing up on your server tab.
 
