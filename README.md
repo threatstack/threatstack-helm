@@ -143,7 +143,7 @@ The following values settings for the helm chart are important to note, or expec
 * `podSecurityPolicyEnabled` :: If `true`, will create a pod security policy and configure the cluster role rules with that policy.
 * `daemonset.priorityClassName` :: Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart.
 * `daemonset.enableDocker`   :: Defaults to `true`, configures the daemonset agents to listen to the docker daemon socket
-* `daemonset.enableContainerd`   :: Defaults to `true`, configures the daemonset agents to listen to the containerd daemon socket
+* `daemonset.enableContainerd`   :: Defaults to `false`, configures the daemonset agents to listen to the containerd daemon socket
 
 #### Overriding Container Daemon Socket Paths
 
