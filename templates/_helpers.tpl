@@ -32,25 +32,19 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Construct the configuration arguments for the Threat Stack Agent container
+Return runtime config if docker enabled
 */}}
-{{- define "threatstack-agent.configArgs" -}}
-{{- $defaultConfigArgs := "enable_kubes 1 enable_containers 1" -}}
-{{- if .Values.additionalConfig -}}
-{{- printf "%s %s" $defaultConfigArgs .Values.additionalConfig -}}
-{{- else -}}
-{{- printf "%s" $defaultConfigArgs -}}
+{{- define "threatstack-agent.docker-config" -}}
+{{- if .Values.daemonset.enableDocker -}}
+{{- default "container_runtimes.docker.enabled true container_runtimes.docker.kubernetes_enabled true" -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Construct the configuration arguments for the Threat Stack Agent api reader container
+Return runtime config if containerd enabled
 */}}
-{{- define "threatstack-agent-kubernetes-api.configArgs" -}}
-{{- $defaultConfigArgs := "enable_kubes 1 enable_kubes_master 1 enable_containers 1" -}}
-{{- if .Values.additionalConfig -}}
-{{- printf "%s %s" $defaultConfigArgs .Values.additionalConfig -}}
-{{- else -}}
-{{- printf "%s" $defaultConfigArgs -}}
+{{- define "threatstack-agent.containerd-config" -}}
+{{- if .Values.daemonset.enableContainerd -}}
+{{- default "container_runtimes.containerd.enabled true container_runtimes.containerd.kubernetes_enabled true" -}}
 {{- end -}}
 {{- end -}}

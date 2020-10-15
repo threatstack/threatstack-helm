@@ -112,15 +112,18 @@ spec:
             cpu: "400m"
 {{- end }}
         volumeMounts:
-          - name: dockersocket
-            mountPath: /var/run/docker.sock
           - name: hostfs
             mountPath: /threatstackfs
+          - name: dockersocket
+            mountPath: /var/run/docker.sock
           - name: containerdsocket
             mountPath: /run/containerd/containerd.sock
           - name: oldcontainerdsocket
             mountPath: /var/run/docker/containerd/docker-containerd.sock
       volumes:
+        - hostPath:
+            path: /
+          name: hostfs
         - hostPath:
             path: {{ .Values.daemonset.volumes.dockersocket.hostPath }}
           name: dockersocket
@@ -130,6 +133,3 @@ spec:
         - hostPath:
             path: {{ .Values.daemonset.volumes.oldcontainerdsocket.hostPath }}
           name: oldcontainerdsocket
-        - hostPath:
-            path: /
-          name: hostfs

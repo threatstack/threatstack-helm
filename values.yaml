@@ -42,11 +42,6 @@ rbac:
 # additionalSetupConfig :: Additional parameters passed to the backend during initial agent registration
 # additionalConfig      :: Additional parameters to configure the running agent
 # capabilities          :: Docker capabilites required for the proper operation of the agent
-rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
-additionalSetupConfig: ""
-
-additionalConfig: "log.level info"
-
 capabilities: |
   ["AUDIT_CONTROL", "AUDIT_READ", "SYS_CHROOT", "CHOWN","DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "SETGID", "SETUID", "SYS_ADMIN", "SYS_PTRACE"]
 
@@ -60,6 +55,9 @@ capabilities: |
 #
 #####
 agentDeployKey: ""
+
+rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
+additionalSetupConfig: ""
 
 #####
 #
@@ -91,6 +89,8 @@ podSecurityPolicyEnabled: false
 #
 ########
 apiReader:
+  additionalRuntimeConfig: "log.level info"
+
   # Override the agent's liveness probe logic from the default:
   # In case of issues with the probe, you can disable it with the
   # following values, to allow easier investigating:
@@ -137,6 +137,10 @@ apiReader:
 #
 ########
 daemonset:
+  enableDocker: true
+  enableContainerd: false
+
+  additionalRuntimeConfig: "log.level info"
   # Override the agent's liveness probe logic from the default:
   # In case of issues with the probe, you can disable it with the
   # following values, to allow easier investigating:
