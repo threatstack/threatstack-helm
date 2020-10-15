@@ -31,7 +31,7 @@ image:
 
 ### RBAC and namespacing settings for release
 # create              :: If `true`, the chart will generate a service account
-# serviceAccountName  :: If `rbac.create` is set to `false`, use this as the service account name 
+# serviceAccountName  :: If `rbac.create` is set to `false`, use this as the service account name
 rbac:
   create: true
   serviceAccountName: "threatstack-agent"
@@ -131,7 +131,7 @@ apiReader:
 # Threat Stack Agent Daemonset settings
 #
 # This section configures a daemonset of threatstack-agent pods
-# 
+#
 # The pods monitor the activity of other pods/deployments on
 # the node.
 #
@@ -179,3 +179,18 @@ daemonset:
   # Optional
   # Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   priorityClassName: ""
+
+  # Configure hostPaths for docker and containerd sockets
+  volumes:
+    dockersocket:
+      hostPath: "/var/run/docker.sock"
+    containerdsocket:
+      hostPath: "/run/containerd/containerd.sock"
+    oldcontainerdsocket:
+      hostPath: "/var/run/docker/containerd/docker-containerd.sock"
+
+  ## Annotations to add to the threatstack daemonset pod(s)
+  #
+  # podAnnotations:
+  #   key: "value"
+  podAnnotations: {}

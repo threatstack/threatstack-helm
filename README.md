@@ -145,6 +145,21 @@ The following values settings for the helm chart are important to note, or expec
 * `daemonset.enableDocker`   :: Defaults to `true`, configures the daemonset agents to listen to the docker daemon socket
 * `daemonset.enableContainerd`   :: Defaults to `true`, configures the daemonset agents to listen to the containerd daemon socket
 
+#### Overriding Container Daemon Socket Paths
+
+There are three paths that get mounted into the container agent. They point to the default paths if not overridden. You can now override where to get these mounts from the underlying host with the following configuration:
+
+* `daemonset.volumes.dockersocket.hostPath` :: Path to docker daemon's socket
+* `daemonset.volumes.containerdsocket.hostPath` :: Path to containerd daemon's socket
+* `daemonset.volumes.oldcontainerdsocket.hostPath` :: Path to older containerd daemon's socket
+
+#### Adding annotations to the Daemonset Pods
+
+The following value can be configured as a map to add custom pod annotations (key/value pairs) to the agent daemonset.
+
+* `daemonset.podAnnotations` :: Defaults to an empty hash
+
+
 ### Contributing enhancements/fixes
 
 See the [CONTRIBUTING document](CONTRIBUTING.md) for details.
