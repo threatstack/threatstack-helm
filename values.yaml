@@ -194,3 +194,15 @@ daemonset:
   # podAnnotations:
   #   key: "value"
   podAnnotations: {}
+
+  # Override this to provide custom audit rules to the agent.
+  # Make sure to use | to ensure the custom rules data is
+  # properly parsed and output.
+  #
+  # Example:
+  #   customAuditRules: |
+  #     foo
+  #     bar
+  #     the end
+  #
+  customAuditRules: ""

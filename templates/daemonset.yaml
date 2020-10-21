@@ -120,6 +120,11 @@ spec:
             mountPath: /run/containerd/containerd.sock
           - name: oldcontainerdsocket
             mountPath: /var/run/docker/containerd/docker-containerd.sock
+{{- if .Values.daemonset.customAuditRules }}
+          - name: custom-audit-rules
+            mountPath: /opt/threatstack/etc/audit-custom.rules
+            subPath: audit-custom.rules
+{{- end }}
       volumes:
         - hostPath:
             path: /
@@ -133,3 +138,11 @@ spec:
         - hostPath:
             path: {{ .Values.daemonset.volumes.oldcontainerdsocket.hostPath }}
           name: oldcontainerdsocket
+{{- if .Values.daemonset.customAuditRules }}
+        - name: custom-audit-rules
+          configMap:
+            name: {{ include "threatstack-agent.name" . }}-config-args
+            items:
+              - key: custom-audit-rules-content
+                path: audit-custom.rules
+{{- end }}
