@@ -1,3 +1,0 @@
-customDaemonsetCmd:
-  command: [""]
-  args: ["", ""]
