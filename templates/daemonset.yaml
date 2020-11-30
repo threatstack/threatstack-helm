@@ -62,6 +62,9 @@ spec:
 {{- if eq .Values.gkeUbuntu true }}
 {{ toYaml .Values.gkeUbuntuCmd | indent 8 }}
 {{- end }}
+{{- if .Values.eksAmazon2 true }}
+{{ toYaml .Values.eksAmazon2Cmd | indent 8 }}
+{{- end }}
 {{- if .Values.customDaemonsetCmd }}
 {{ toYaml .Values.customDaemonsetCmd | indent 8 }}
 {{- end }}

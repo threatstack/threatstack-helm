@@ -18,6 +18,12 @@ gkeUbuntuCmd:
   command: ["bash"]
   args: ["-c", "chroot /threatstackfs /bin/bash -c 'systemctl stop auditd; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"]
 
+# Using EKS Amazon Linux 2 nodes
+eksAmazon2: false
+eksAmazon2Cmd:
+  command: ["bash"]
+  args: ["-c", "chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"]
+
 # Uncomment and set child attributes to execute custom commands in your container
 customDaemonsetCmd: {}
   # command: [""]
