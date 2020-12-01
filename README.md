@@ -125,6 +125,7 @@ The following values settings for the helm chart are important to note, or expec
 * `image.version`         :: The docker tag for the container image to install. It defaults to Threat Stack's latest offical docker image version for the agent at the time the chart was released. **NOTE:** Changing this could lead to pulling an unofficial, incorrect, or incompatible image, and is strongly discouraged.
 * `gkeContainerOs`        :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with ContainerOS nodes. Defaults to `false`
 * `gkeUbuntu`             :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with Ubuntu nodes. Defaults to `false`
+* `eksAmazon2`            :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on EKS with Amazon Linux 2 nodes. Defaults to `false`
 * `customDaemonsetCmd`    :: Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset.
 >>>
 **Warning:** Setting `customDaemonsetCmd` improperly can result in the Threat Stack agent not running correctly
