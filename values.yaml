@@ -212,3 +212,14 @@ daemonset:
   #     the end
   #
   customAuditRules: ""
+
+  # Override this to provide custom auditd config
+  # https://threatstack.zendesk.com/hc/en-us/articles/360030897272-FAQ-Workaround-for-the-Known-Linux-Limitation-with-auditd
+  #
+  # Example:
+  #   customTsAuditdConfig: |
+  #     {
+  #       ...
+  #     }
+  #
+  customTsAuditdConfig: ""

@@ -128,6 +128,11 @@ spec:
             mountPath: /opt/threatstack/etc/audit-custom.rules
             subPath: audit-custom.rules
 {{- end }}
+{{- if .Values.daemonset.customTsAuditd }}
+          - name: custom-tsauditd-config
+            mountPath: /opt/threatstack/etc/tsauditd-custom.cfg
+            subPath: tsauditd-custom.cfg
+{{- end }}
       volumes:
         - hostPath:
             path: /
@@ -148,4 +153,12 @@ spec:
             items:
               - key: custom-audit-rules-content
                 path: audit-custom.rules
+{{- end }}
+{{- if .Values.daemonset.customTsAuditd }}
+        - name: custom-tsauditd-config
+          configMap:
+            name: {{ include "threatstack-agent.name" . }}-config-args
+            items:
+              - key: custom-tsauditd-config
+                path: tsauditd-custom.cfg
 {{- end }}

@@ -13,3 +13,6 @@ data:
 {{- if .Values.daemonset.customAuditRules }}
   custom-audit-rules-content: {{ toYaml .Values.daemonset.customAuditRules | indent 4 }}
 {{- end }}
+{{- if .Values.daemonset.customTsAuditd }}
+  custom-tsauditd-config: {{ toYaml .Values.daemonset.customTsAuditd | indent 4 }}
+{{- end }}
