@@ -13,8 +13,8 @@ data:
 {{- if .Values.daemonset.customAuditRules }}
   custom-audit-rules-content: {{ toYaml .Values.daemonset.customAuditRules | indent 4 }}
 {{- end }}
-{{- if .Values.daemonset.customTsAuditd }}
-  custom-tsauditd-config-content: {{ toYaml .Values.daemonset.customTsAuditd | indent 4 }}
+{{- if .Values.daemonset.customTsAuditdConfig }}
+  custom-tsauditd-config-content: {{ toYaml .Values.daemonset.customTsAuditdConfig | indent 4 }}
 {{- end }}
 {{- if .Values.daemonset.customLuaFilter }}
   custom-luafilter-content: {{ toYaml .Values.daemonset.customLuaFilter | indent 4 }}
