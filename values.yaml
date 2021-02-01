@@ -224,14 +224,14 @@ daemonset:
   #
   customTsAuditdConfig: ""
 
-  # Override this to provide custom lua filters to the agent.
-  # Make sure to use | to ensure the custom rules data is
+  # Override this to provide a custom lua filter to the agent.
+  # Make sure to use | to ensure the custom lua filter is
   # properly parsed and output.
   #
   # Example:
-  #   customLuaFilters: |
+  #   customLuaFilter: |
   #     foo
   #     bar
   #     the end
   #
-  customLuaFilters: ""
+  customLuaFilter: ""

@@ -14,8 +14,8 @@ data:
   custom-audit-rules-content: {{ toYaml .Values.daemonset.customAuditRules | indent 4 }}
 {{- end }}
 {{- if .Values.daemonset.customTsAuditd }}
-  custom-tsauditd-config: {{ toYaml .Values.daemonset.customTsAuditd | indent 4 }}
+  custom-tsauditd-config-content: {{ toYaml .Values.daemonset.customTsAuditd | indent 4 }}
 {{- end }}
-{{- if .Values.daemonset.customLuaFilters }}
-  custom-luafilters-config: {{ toYaml .Values.daemonset.customLuaFilters | indent 4 }}
+{{- if .Values.daemonset.customLuaFilter }}
+  custom-luafilter-content: {{ toYaml .Values.daemonset.customLuaFilter | indent 4 }}
 {{- end }}
