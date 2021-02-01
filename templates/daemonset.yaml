@@ -133,6 +133,11 @@ spec:
             mountPath: /opt/threatstack/etc/tsauditd-custom.cfg
             subPath: tsauditd-custom.cfg
 {{- end }}
+{{- if .Values.daemonset.customLuaFilters }}
+          - name: custom-luafilters-config
+            mountPath: /opt/threatstack/etc/tsauditd-custom.lua
+            subPath: tsauditd-custom.lua
+{{- end }}
       volumes:
         - hostPath:
             path: /
@@ -161,4 +166,12 @@ spec:
             items:
               - key: custom-tsauditd-config
                 path: tsauditd-custom.cfg
+{{- end }}
+{{- if .Values.daemonset.customLuaFilters }}
+        - name: custom-luafilters-config
+          configMap:
+            name: {{ include "threatstack-agent.name" . }}-config-args
+            items:
+              - key: custom-luafilters-config
+                path: tsauditd-custom.lua
 {{- end }}
