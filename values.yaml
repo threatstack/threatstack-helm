@@ -49,7 +49,7 @@ rbac:
 # additionalConfig      :: Additional parameters to configure the running agent
 # capabilities          :: Docker capabilites required for the proper operation of the agent
 capabilities: |
-  ["AUDIT_CONTROL", "SYS_CHROOT", "CHOWN","DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "SETGID", "SETUID", "SYS_ADMIN", "SYS_PTRACE"]
+  ["AUDIT_CONTROL", "SYS_ADMIN", "SYS_PTRACE"]
 
 #####
 # WARNING!
@@ -197,9 +197,15 @@ daemonset:
 
   ## Annotations to add to the threatstack daemonset pod(s)
   #
+  # To remove the apparmor annotation, add a comment as the attribute value,
+  # Example:
+  #   podAnnotations
+  #     # This comment triggers REMOVING any podAnnotations!
+  #
   # podAnnotations:
   #   key: "value"
-  podAnnotations: {}
+  podAnnotations:
+    container.apparmor.security.beta.kubernetes.io/threatstack-agent: unconfined
 
   # Override this to provide custom audit rules to the agent.
   # Make sure to use | to ensure the custom rules data is
