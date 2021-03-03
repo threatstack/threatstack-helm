@@ -99,7 +99,7 @@ spec:
                 name: {{ include "threatstack-agent.name" . }}-config-args
                 key: config-args
         securityContext:
-          privileged: false
+          {{- toYaml .Values.daemonset.securityContext | nindent 10 }}
           capabilities:
             add: {{ .Values.capabilities | trim }}
 {{- if .Values.daemonset.resources }}

@@ -119,7 +119,6 @@ apiReader:
   #    limits:
   #      memory: "512Mi"
   #      cpu: "400m"
-
   # Override kubernetes api reader agent's default target nodes
   # Default is any node within the target namespace
   #
@@ -131,6 +130,9 @@ apiReader:
   affinity: {}
   # Optional
   tolerations: []
+
+  securityContext:
+    privileged: false
 
 ########
 #
@@ -241,3 +243,6 @@ daemonset:
   #     the end
   #
   customLuaFilter: ""
+
+  securityContext:
+    privileged: false
