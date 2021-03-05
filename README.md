@@ -1,7 +1,10 @@
 Threat Stack Agent Helm Chart
 =============================
 
-### Overview
+![Release Version](https://img.shields.io/github/v/release/threatstack/threatstack-helm)
+
+
+## Overview
 
 This project defines the helm chart to deploy the Threat Stack container agent in the recommended configuration for kubernetes.
 
@@ -30,13 +33,59 @@ The following kubernetes objects are created when the chart is installed:
 * A ConfigMap will be created to store the Threat Stack agent's setup and runtime configuration options.
 * Optionally a Pod Security Policy for clusters with strict pod admission control requirements.
 
-### Installation
 
->>>
-These instructions assume that you already have helm (and the server-side component tiller, if using helm 2) installed in your environment, and that any RBAC configuration for proper operation of helm has been completed.
->>>
 
-#### Local Installation
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| additionalSetupConfig | string | `""` | A list of command line arguments used when the agent container registers itself with the Threat Stack platform. See official documentation for details. |
+| agentDeployKey | string | `""` |  |
+| agentSetupExternalSecretRef | object | `{}` |  |
+| apiReader.additionalRuntimeConfig | string | `"log.level info"` |  |
+| apiReader.affinity | object | `{}` |  |
+| apiReader.nodeSelector | object | `{}` |  |
+| apiReader.tolerations | list | `[]` |  |
+| capabilities | string | `"[\"AUDIT_CONTROL\", \"SYS_ADMIN\", \"SYS_PTRACE\"]\n"` | Docker capabilites required for the proper operation of the agent |
+| customDaemonsetCmd | object | `{}` | Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset. |
+| daemonset.additionalRuntimeConfig | string | `"log.level info"` |  |
+| daemonset.affinity | object | `{}` |  |
+| daemonset.customAuditRules | string | `""` |  |
+| daemonset.customLuaFilter | string | `""` |  |
+| daemonset.customTsAuditdConfig | string | `""` |  |
+| daemonset.enableContainerd | bool | `false` | Defaults to `false`, configures the daemonset agents to listen to the containerd daemon socket |
+| daemonset.enableDocker | bool | `true` | Defaults to `true`, configures the daemonset agents to listen to the docker daemon socket |
+| daemonset.nodeSelector | object | `{}` |  |
+| daemonset.podAnnotations."container.apparmor.security.beta.kubernetes.io/threatstack-agent" | string | `"unconfined"` |  |
+| daemonset.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
+| daemonset.tolerations | list | `[]` |  |
+| daemonset.volumes.containerdsocket.hostPath | string | `"/run/containerd/containerd.sock"` | Path to docker daemon's socket |
+| daemonset.volumes.dockersocket.hostPath | string | `"/var/run/docker.sock"` | Path to docker daemon's socket |
+| daemonset.volumes.oldcontainerdsocket.hostPath | string | `"/var/run/docker/containerd/docker-containerd.sock"` | Path to older containerd daemon's socket |
+| eksAmazon2 | bool | `false` | If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on EKS with Amazon Linux 2 nodes. Defaults to `false` |
+| eksAmazon2Cmd.args[0] | string | `"-c"` |  |
+| eksAmazon2Cmd.args[1] | string | `"chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"` |  |
+| eksAmazon2Cmd.command[0] | string | `"bash"` |  |
+| fullnameOverride | string | `""` |  |
+| gkeContainerOs | bool | `false` | If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with ContainerOS node |
+| gkeContainerOsCmd.args[0] | string | `"-c"` |  |
+| gkeContainerOsCmd.args[1] | string | `"chroot /threatstackfs /bin/bash -c 'systemctl stop systemd-journald-audit.socket; systemctl mask systemd-journald-audit.socket; systemctl restart systemd-journald; auditctl --backlog_wait_time 0'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"` |  |
+| gkeContainerOsCmd.command[0] | string | `"bash"` |  |
+| gkeUbuntu | bool | `false` | If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with Ubuntu nodes. Defaults to `false` |
+| gkeUbuntuCmd.args[0] | string | `"-c"` |  |
+| gkeUbuntuCmd.args[1] | string | `"chroot /threatstackfs /bin/bash -c 'systemctl stop auditd; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"` |  |
+| gkeUbuntuCmd.command[0] | string | `"bash"` |  |
+| image.pullPolicy | string | `"Always"` |  |
+| image.repository | string | `"threatstack/ts-docker2"` | The docker repository for the container image to install. It defaults to Threat Stack's offical docker hub repository for the agent. **NOTE:** Changing this could lead to pulling an unofficial, incorrect, or incompatible image, and is strongly discouraged. |
+| image.version | string | `""` | The docker tag for the container image to install. It defaults to Threat Stack's latest offical docker image version for the agent at the time the chart was released. **NOTE:** Changing this could lead to pulling an unofficial, incorrect, or incompatible image, and is strongly discouraged. >>> **Warning:** Setting `customDaemonsetCmd` improperly can result in the Threat Stack agent not running correctly >>> |
+| imagePullSecrets | list | `[]` | If pulling the agent from a private/internal docker registry that requires credentials, you will need to add the name of your docker credentials secret to this array. *This secret needs to be defined outside of installing this helm chart.* Defaults to an empty array which will only work with public registries. * For more guidance with using private container registries, please review the following kubernetes documentation for details around how to set this upcorrectly with your registry service: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry |
+| nameOverride | string | `""` |  |
+| podSecurityPolicyEnabled | bool | `false` | Deploy Threat Stack with the Pod Security Policy for clusters with strict admission control requirements. |
+| rbac.create | bool | `true` | If `true`, will create the needed service account to run. If false, the chart will leverage the service account defined in `rbac.serviceAccountName` |
+| rbac.serviceAccountName | string | `"threatstack-agent"` |  |
+| rulesets | string | `"Base Rule Set, Docker Rule Set, Kubernetes Rule Set"` | The list of Threat Stack rulesets that the againt container should run with. The single-quotes in the double-quotes are intentional and not optional. |
+
+## Local Installation
 
 The instructions below assume the helm chart has been released to a repository. Alternatively, you can clone this git repository and run `helm package .` in the repository's root to get a `.tgz` file built locally.
 
@@ -65,7 +114,7 @@ The threatstack agent helm chart follows the standard installation process for c
    > helm install <HELM_RELEASE_NAME> --values ./<values-override-filename>.yaml threatstack/threatstack-agent
    ```
 
-#### Updating the chart
+## Updating the chart
 
 After making changes, run:
 
@@ -79,7 +128,7 @@ After making changes, run:
 > helm delete <HELM_RELEASE_NAME>
 ```
 
-#### Additional Installation Notes
+## Additional Installation Notes
 
 There is one chart values setting, `agentDeployKey`, that is not defined in the default chart `values.yaml`. The reason is two-fold:
 
@@ -117,49 +166,6 @@ The value defined in the secret by `agentSetupExternalSecretRef.name`/`agentSetu
 --deploy-key <your-deploy-key> --ruleset '<your-rulesets>' <additional-setup-configuration>"
 ```
 
-#### Important Configuration Settings
-
-The following values settings for the helm chart are important to note, or expected to be modified for each target environment:
-
-* `image.repository`      :: The docker repository for the container image to install. It defaults to Threat Stack's offical docker hub repository for the agent. **NOTE:** Changing this could lead to pulling an unofficial, incorrect, or incompatible image, and is strongly discouraged.
-* `image.version`         :: The docker tag for the container image to install. It defaults to Threat Stack's latest offical docker image version for the agent at the time the chart was released. **NOTE:** Changing this could lead to pulling an unofficial, incorrect, or incompatible image, and is strongly discouraged.
-* `gkeContainerOs`        :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with ContainerOS nodes. Defaults to `false`
-* `gkeUbuntu`             :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on GKE with Ubuntu nodes. Defaults to `false`
-* `eksAmazon2`            :: If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on EKS with Amazon Linux 2 nodes. Defaults to `false`
-* `customDaemonsetCmd`    :: Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset.
->>>
-**Warning:** Setting `customDaemonsetCmd` improperly can result in the Threat Stack agent not running correctly
->>>
-* `rbac.create`           :: If `true`, will create the needed service account to run. If false, the chart will leverage the service account defined in `rbac.serviceAccountName`
-* `imagePullSecrets`      :: If pulling the agent from a private/internal docker registry that requires credentials, you will need to add the name of your docker credentials secret to this array. *This secret needs to be defined outside of installing this helm chart.* Defaults to an empty array which will only work with public registries.
-    * For more guidance with using private container registries, please review the following kubernetes documentation for details around how to set this upcorrectly with your registry service:
-        * https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
-        * https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line
-        * https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry
-* `rulesets`              :: The list of Threat Stack rulesets that the againt container should run with. The single-quotes in the double-quotes are intentional and not optional.
-* `additionalSetupConfig` :: A list of command line arguments used when the agent container registers itself with the Threat Stack platform. See official documentation for details.
-* `additionalConfig`      :: **(No longer supported)**  This parameter has been replaced with `additionalRuntimeConfig`, which allows you to define configuration separately for the daemonset and the api-reader deployment with:
-    * `daemonset.additionalRuntimeConfig` :: Additional runtime configuration for the daemonset agents
-    * `apiReader.additionalRuntimeConfig` :: Additional runtime configuration for the api-reader deployment agent
-* `podSecurityPolicyEnabled` :: If `true`, will create a pod security policy and configure the cluster role rules with that policy.
-* `daemonset.priorityClassName` :: Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart.
-* `daemonset.enableDocker`   :: Defaults to `true`, configures the daemonset agents to listen to the docker daemon socket
-* `daemonset.enableContainerd`   :: Defaults to `false`, configures the daemonset agents to listen to the containerd daemon socket
-
-#### Adding annotations to the Daemonset Pods
-
-The following value can be configured as a map to add custom pod annotations (key/value pairs) to the agent daemonset.
-
-* `daemonset.podAnnotations` :: Defaults to an empty hash
-
-#### Overriding Container Daemon Socket Paths
-
-There are three paths that get mounted into the container agent. They point to the default paths if not overridden. You can now override where to get these mounts from the underlying host with the following configuration:
-
-* `daemonset.volumes.dockersocket.hostPath` :: Path to docker daemon's socket
-* `daemonset.volumes.containerdsocket.hostPath` :: Path to containerd daemon's socket
-* `daemonset.volumes.oldcontainerdsocket.hostPath` :: Path to older containerd daemon's socket
-
 ### Contributing enhancements/fixes
 
 See the [CONTRIBUTING document](CONTRIBUTING.md) for details.
@@ -167,3 +173,9 @@ See the [CONTRIBUTING document](CONTRIBUTING.md) for details.
 ### Licensing
 
 See the [LICENSE](LICENSE)
+
+### Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Threat Stack Inc. | support@threatstack.com |  |
