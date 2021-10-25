@@ -53,8 +53,8 @@ The following kubernetes objects are created when the chart is installed:
 | daemonset.customAuditRules | string | `""` |  |
 | daemonset.customLuaFilter | string | `""` |  |
 | daemonset.customTsAuditdConfig | string | `""` |  |
-| daemonset.enableContainerd | bool | `false` | Defaults to `false`, configures the daemonset agents to listen to the containerd daemon socket |
-| daemonset.enableDocker | bool | `true` | Defaults to `true`, configures the daemonset agents to listen to the docker daemon socket |
+| daemonset.enableContainerd | bool | `unset` | Configures the daemonset agents to listen to the containerd daemon socket. **By default in agent 2.4.0+, the agent detects if containerd is running at startup**  |
+| daemonset.enableDocker | bool | `unset` | Configures the daemonset agents to listen to the docker daemon socket. **By default in agent 2.4.0+, the agent detects if docker is running at startup** |
 | daemonset.nodeSelector | object | `{}` |  |
 | daemonset.podAnnotations."container.apparmor.security.beta.kubernetes.io/threatstack-agent" | string | `"unconfined"` |  |
 | daemonset.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |

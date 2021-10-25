@@ -145,8 +145,11 @@ apiReader:
 #
 ########
 daemonset:
-  enableDocker: true
-  enableContainerd: false
+  # Override the agent's default detection behavior that determines
+  # which docker service to monitor
+  #
+  # enableDocker: false
+  # enableContainerd: false
 
   additionalRuntimeConfig: "log.level info"
   # Override the agent's liveness probe logic from the default:
