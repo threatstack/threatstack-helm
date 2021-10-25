@@ -191,11 +191,6 @@ daemonset:
   # Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   priorityClassName: ""
 
-  # Configure hostPaths for docker and containerd sockets
-  volumes:
-    oldcontainerdsocket:
-      hostPath: "/var/run/docker/containerd/docker-containerd.sock"
-
   ## Annotations to add to the threatstack daemonset pod(s)
   #
   # To remove the apparmor annotation, add a comment as the attribute value,
