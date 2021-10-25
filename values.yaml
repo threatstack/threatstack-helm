@@ -193,10 +193,6 @@ daemonset:
 
   # Configure hostPaths for docker and containerd sockets
   volumes:
-    dockersocket:
-      hostPath: "/var/run/docker.sock"
-    containerdsocket:
-      hostPath: "/run/containerd/containerd.sock"
     oldcontainerdsocket:
       hostPath: "/var/run/docker/containerd/docker-containerd.sock"
 
