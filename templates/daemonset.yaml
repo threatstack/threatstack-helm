@@ -117,8 +117,6 @@ spec:
         volumeMounts:
           - name: hostfs
             mountPath: /threatstackfs
-          - name: oldcontainerdsocket
-            mountPath: /var/run/docker/containerd/docker-containerd.sock
 {{- if .Values.daemonset.customAuditRules }}
           - name: custom-audit-rules
             mountPath: /opt/threatstack/etc/audit-custom.rules
@@ -138,9 +136,6 @@ spec:
         - hostPath:
             path: /
           name: hostfs
-        - hostPath:
-            path: {{ .Values.daemonset.volumes.oldcontainerdsocket.hostPath }}
-          name: oldcontainerdsocket
 {{- if .Values.daemonset.customAuditRules }}
         - name: custom-audit-rules
           configMap:
