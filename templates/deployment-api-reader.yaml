@@ -23,6 +23,13 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
       name: {{ include "threatstack-agent.name" .}}-kubernetes-api
       annotations:
+        # If configmap or secret files change, this will change the checksum annotations in the daemonset, forcing a redeploy.
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+{{- if not .Values.agentSetupExternalSecretRef }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+{{- else }}
+        checksum/secrets: {{ .Values.agentSetupExternalSecretRef.checksum | sha256sum }}
+{{- end }}
     spec:
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
