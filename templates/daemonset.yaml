@@ -83,7 +83,7 @@ spec:
           exec:
             command: [ "sh", "-c", "tsagent status" ]
           initialDelaySeconds: 15
-          periodSeconds: 60
+          periodSeconds: 360
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 5
@@ -124,12 +124,6 @@ spec:
         volumeMounts:
           - name: hostfs
             mountPath: /threatstackfs
-          - name: dockersocket
-            mountPath: /var/run/docker.sock
-          - name: containerdsocket
-            mountPath: /run/containerd/containerd.sock
-          - name: oldcontainerdsocket
-            mountPath: /var/run/docker/containerd/docker-containerd.sock
 {{- if .Values.daemonset.customAuditRules }}
           - name: custom-audit-rules
             mountPath: /opt/threatstack/etc/audit-custom.rules
@@ -149,15 +143,6 @@ spec:
         - hostPath:
             path: /
           name: hostfs
-        - hostPath:
-            path: {{ .Values.daemonset.volumes.dockersocket.hostPath }}
-          name: dockersocket
-        - hostPath:
-            path: {{ .Values.daemonset.volumes.containerdsocket.hostPath }}
-          name: containerdsocket
-        - hostPath:
-            path: {{ .Values.daemonset.volumes.oldcontainerdsocket.hostPath }}
-          name: oldcontainerdsocket
 {{- if .Values.daemonset.customAuditRules }}
         - name: custom-audit-rules
           configMap:

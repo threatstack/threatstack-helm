@@ -53,15 +53,12 @@ The following kubernetes objects are created when the chart is installed:
 | daemonset.customAuditRules | string | `""` |  |
 | daemonset.customLuaFilter | string | `""` |  |
 | daemonset.customTsAuditdConfig | string | `""` |  |
-| daemonset.enableContainerd | bool | `false` | Defaults to `false`, configures the daemonset agents to listen to the containerd daemon socket |
-| daemonset.enableDocker | bool | `true` | Defaults to `true`, configures the daemonset agents to listen to the docker daemon socket |
+| daemonset.enableContainerd | bool | `unset` | Configures the daemonset agents to listen to the containerd daemon socket. **By default in agent 2.4.0+, the agent detects if containerd is running at startup**  |
+| daemonset.enableDocker | bool | `unset` | Configures the daemonset agents to listen to the docker daemon socket. **By default in agent 2.4.0+, the agent detects if docker is running at startup** |
 | daemonset.nodeSelector | object | `{}` |  |
 | daemonset.podAnnotations."container.apparmor.security.beta.kubernetes.io/threatstack-agent" | string | `"unconfined"` |  |
 | daemonset.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
 | daemonset.tolerations | list | `[]` |  |
-| daemonset.volumes.containerdsocket.hostPath | string | `"/run/containerd/containerd.sock"` | Path to docker daemon's socket |
-| daemonset.volumes.dockersocket.hostPath | string | `"/var/run/docker.sock"` | Path to docker daemon's socket |
-| daemonset.volumes.oldcontainerdsocket.hostPath | string | `"/var/run/docker/containerd/docker-containerd.sock"` | Path to older containerd daemon's socket |
 | eksAmazon2 | bool | `false` | If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on EKS with Amazon Linux 2 nodes. Defaults to `false` |
 | eksAmazon2Cmd.args[0] | string | `"-c"` |  |
 | eksAmazon2Cmd.args[1] | string | `"chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"` |  |

@@ -32,19 +32,29 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Return runtime config if docker enabled
+Return runtime config if docker is disabled
 */}}
 {{- define "threatstack-agent.docker-config" -}}
-{{- if .Values.daemonset.enableDocker -}}
+{{- if kindIs "invalid" .Values.daemonset.enableDocker -}}
+{{- else -}}
+{{- if eq .Values.daemonset.enableDocker false -}}
+{{- default "container_runtimes.docker.enabled false container_runtimes.docker.kubernetes_enabled false" -}}
+{{- else -}}
 {{- default "container_runtimes.docker.enabled true container_runtimes.docker.kubernetes_enabled true" -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Return runtime config if containerd enabled
+Return runtime config if containerd is disabled
 */}}
 {{- define "threatstack-agent.containerd-config" -}}
-{{- if .Values.daemonset.enableContainerd -}}
+{{- if kindIs "invalid" .Values.daemonset.enableContainerd -}}
+{{- else -}}
+{{- if eq .Values.daemonset.enableContainerd false -}}
+{{- default "container_runtimes.containerd.enabled false container_runtimes.containerd.kubernetes_enabled false" -}}
+{{- else -}}
 {{- default "container_runtimes.containerd.enabled true container_runtimes.containerd.kubernetes_enabled true" -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}

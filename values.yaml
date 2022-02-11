@@ -145,8 +145,11 @@ apiReader:
 #
 ########
 daemonset:
-  enableDocker: true
-  enableContainerd: false
+  # Override the agent's default detection behavior that determines
+  # which docker service to monitor
+  #
+  # enableDocker: false
+  # enableContainerd: false
 
   additionalRuntimeConfig: "log.level info"
   # Override the agent's liveness probe logic from the default:
@@ -187,15 +190,6 @@ daemonset:
   # Optional
   # Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   priorityClassName: ""
-
-  # Configure hostPaths for docker and containerd sockets
-  volumes:
-    dockersocket:
-      hostPath: "/var/run/docker.sock"
-    containerdsocket:
-      hostPath: "/run/containerd/containerd.sock"
-    oldcontainerdsocket:
-      hostPath: "/var/run/docker/containerd/docker-containerd.sock"
 
   ## Annotations to add to the threatstack daemonset pod(s)
   #
