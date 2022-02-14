@@ -46,6 +46,8 @@ The following kubernetes objects are created when the chart is installed:
 | apiReader.affinity | object | `{}` |  |
 | apiReader.nodeSelector | object | `{}` |  |
 | apiReader.tolerations | list | `[]` |  |
+| apiReader.podAnnotations | string | {} |  |
+| apiReader.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
 | capabilities | string | `"[\"AUDIT_CONTROL\", \"SYS_ADMIN\", \"SYS_PTRACE\"]\n"` | Docker capabilites required for the proper operation of the agent |
 | customDaemonsetCmd | object | `{}` | Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset. |
 | daemonset.additionalRuntimeConfig | string | `"log.level info"` |  |
@@ -148,12 +150,18 @@ Assuming you override the default values to match our environment in a `values.y
 
 ##### Using the `agentSetupExternalSecretRef` value block
 
-> **WARNING:** Do not set the `agentSetupExternalSecretRef` block *and* the `agentDeployKey` settings at the same time. This will cause unnecessary kubernetes resource definitions to be created. If you had previously used the `agentDeployKey` value, the secret associated with it may be destroyed on deployment.
+>>>
+**IMPORTANT:** Using `agentSetupExternalSecretRef` decouples secret management from the helm chart. Therefore, if the value of the secret changes, the agent DaemonSet and Deployment will _not_ be redeployed/restarted. The user will need to force a redeployment of the helm chart explicitly.
+
+However, if the secret's name or secret's entry name changes in the `values.yaml` of the chart, helm will recognize this change with a new release, and trigger a redeployment of the DaemonsSet and Deployment. One way to take advantage of this is to update the secrets entry value name (what is defined at `agentSetupExternalSecretRef.value`) when changing the secret data, and doing a redeploy of the chart. The chart trigger a redeployment of the agent pods.
+>>>
 
 An alternative to having the chart define the `ts-setup-args` secret itself, you can instead have it point to your own self-managed secret. Doing so requires the following three values to be set:
 
 * `agentSetupExternalSecretRef.name`      :: This is the name of your self-managed secret.
 * `agentSetupExternalSecretRef.key`       :: This is the key in your self-managed secret that is associated with the data you want to supply from the secret, to the Threat Stack agent setup registration.
+
+Do not set the `agentSetupExternalSecretRef` block *and* the `agentDeployKey` settings at the same time. This will cause unnecessary kubernetes resource definitions to be created. If you had previously used the `agentDeployKey` value, the secret associated with it may be destroyed on deployment.
 
 Using the `agentSetupExternalSecretRef` block will cause the chart to ignore the `agentDeployKey`, `rulesets`, and `additionalSetupConfig` values defined in `values.yaml` or any other values override file, until existing pods are terminated/rescheduled.
 

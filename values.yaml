@@ -131,6 +131,22 @@ apiReader:
   # Optional
   tolerations: []
 
+  # Optional
+  # Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+  priorityClassName: ""
+
+  ## Annotations to add to the threatstack api reader agent pod
+  #
+  # To remove the apparmor annotation, add a comment as the attribute value,
+  # Example:
+  #   podAnnotations:
+  #     # This comment triggers REMOVING any podAnnotations!
+  #
+  # podAnnotations:
+  #   key: "value"
+  # Optional
+  podAnnotations: {}
+
   securityContext:
     privileged: false
 
