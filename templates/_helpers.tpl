@@ -52,6 +52,15 @@ Return capabilities required for api-reader pod
 {{- end -}}
 
 {{/*
+Return eBPF configuration required if enabled
+*/}}
+{{- define "threatstack-agent.daemonset-ebpf-config" -}}
+{{- if .Values.ebpfEnabled -}}
+{{- "enable_bpf_sensors 1" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return runtime config if docker is disabled
 */}}
 {{- define "threatstack-agent.docker-config" -}}
