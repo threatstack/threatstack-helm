@@ -46,10 +46,14 @@ rbac:
 #
 # rulesets              :: Define what rules will be applied to the agent by default
 # additionalSetupConfig :: Additional parameters passed to the backend during initial agent registration
-# additionalConfig      :: Additional parameters to configure the running agent
 # capabilities          :: Docker capabilites required for the proper operation of the agent
-capabilities: |
-  ["AUDIT_CONTROL", "SYS_ADMIN", "SYS_PTRACE", "SYS_NICE"]
+rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
+additionalSetupConfig: ""
+capabilities:
+  - AUDIT_CONTROL
+  - SYS_ADMIN
+  - SYS_PTRACE
+  - SYS_NICE
 
 #####
 # WARNING!
@@ -62,8 +66,6 @@ capabilities: |
 #####
 agentDeployKey: ""
 
-rulesets: "Base Rule Set, Docker Rule Set, Kubernetes Rule Set"
-additionalSetupConfig: ""
 
 #####
 #

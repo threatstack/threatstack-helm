@@ -32,6 +32,26 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Return capabilities required for daemonset agent pods
+*/}}
+{{- define "threatstack-agent.daemonset-capabilities" -}}
+{{- $ebpf_caps := list "SYS_RESOURCE" "IPC_LOCK" -}}
+{{- if .Values.ebpfEnabled -}}
+{{- $cap_list := concat .Values.capabilities $ebpf_caps -}}
+{{- range $cap_list -}}"{{- . -}}", {{ end -}}
+{{- else -}}
+{{- range .Values.capabilities -}}"{{- . -}}", {{ end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return capabilities required for api-reader pod
+*/}}
+{{- define "threatstack-agent.apireader-capabilities" -}}
+{{- range .Values.capabilities -}}"{{- . -}}", {{ end -}}
+{{- end -}}
+
+{{/*
 Return runtime config if docker is disabled
 */}}
 {{- define "threatstack-agent.docker-config" -}}
