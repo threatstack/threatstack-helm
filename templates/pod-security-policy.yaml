@@ -19,7 +19,7 @@ spec:
       readOnly: false
     - pathPrefix: "/run/containerd/containerd.sock"
       readOnly: false
-{{- if .Values.daemonset.ebpfEnabled }}
+{{- if .Values.ebpfEnabled }}
     - pathPrefix: "/sys/kernel/debug"
       readOnly: false
     - pathPrefix: "/sys/fs/cgroup"
