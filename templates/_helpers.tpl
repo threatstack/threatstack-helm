@@ -87,3 +87,16 @@ Return runtime config if containerd is disabled
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return low-power config if setting is enabled
+*/}}
+{{- define "threatstack-agent.daemonset-lowpower-config" -}}
+{{- if kindIs "invalid" .Values.daemonset.enableLowPowerMode -}}
+{{- else -}}
+{{- if eq .Values.daemonset.enableLowPowerMode false -}}
+{{- else -}}
+{{- default "--low-power=true" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

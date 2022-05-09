@@ -169,6 +169,15 @@ daemonset:
   # enableDocker: false
   # enableContainerd: false
 
+  # Enable low-power mode
+  # Configures the daemonset agents to perform better in 
+  # tightly-resourced environments. The agent trades some telemetry
+  # reporting for reduced CPU and memory consumption.
+  #
+  # Ref: https://threatstack.zendesk.com/hc/en-us/articles/360016132692-Threat-Stack-Kubernetes-Deployment
+  #
+  enableLowPowerMode: true
+
   additionalRuntimeConfig: "log.level info"
   # Override the agent's liveness probe logic from the default:
   # In case of issues with the probe, you can disable it with the
