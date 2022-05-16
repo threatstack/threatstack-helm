@@ -96,7 +96,7 @@ Return low-power config if setting is enabled
 {{- else -}}
 {{- if eq .Values.daemonset.enableLowPowerMode false -}}
 {{- else -}}
-{{- default "--low-power=true" -}}
+{{- default "--low_power=true" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
