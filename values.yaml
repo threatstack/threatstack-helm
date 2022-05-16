@@ -176,7 +176,7 @@ daemonset:
   #
   # Ref: https://threatstack.zendesk.com/hc/en-us/articles/360016132692-Threat-Stack-Kubernetes-Deployment
   #
-  enableLowPowerMode: true
+  enableLowPowerMode: false
 
   additionalRuntimeConfig: "log.level info"
   # Override the agent's liveness probe logic from the default:
