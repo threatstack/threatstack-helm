@@ -48,7 +48,7 @@ The following kubernetes objects are created when the chart is installed:
 | apiReader.tolerations | list | `[]` |  |
 | apiReader.podAnnotations | string | {} |  |
 | apiReader.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
-| capabilities | string | `"[\"AUDIT_CONTROL\", \"SYS_ADMIN\", \"SYS_PTRACE\"]\n"` | Docker capabilites required for the proper operation of the agent |
+| capabilities | list | `["AUDIT_CONTROL", "SYS_ADMIN", "SYS_PTRACE", "SYS_NICE"]` | Docker capabilites required for the proper operation of the agent |
 | customDaemonsetCmd | object | `{}` | Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset. |
 | daemonset.additionalRuntimeConfig | string | `"log.level info"` |  |
 | daemonset.affinity | object | `{}` |  |
@@ -57,6 +57,7 @@ The following kubernetes objects are created when the chart is installed:
 | daemonset.customTsAuditdConfig | string | `""` |  |
 | daemonset.enableContainerd | bool | `unset` | Configures the daemonset agents to listen to the containerd daemon socket. **By default in agent 2.4.0+, the agent detects if containerd is running at startup**  |
 | daemonset.enableDocker | bool | `unset` | Configures the daemonset agents to listen to the docker daemon socket. **By default in agent 2.4.0+, the agent detects if docker is running at startup** |
+| daemonset.enableLowPowerMode | bool | false | Configures the daemonset agents to perform better in tightly-resourced environments. The agent trades some telemetry reporting for reduced CPU and memory consumption. Ref: https://threatstack.zendesk.com/hc/en-us/articles/360016132692-Threat-Stack-Kubernetes-Deployment |
 | daemonset.nodeSelector | object | `{}` |  |
 | daemonset.podAnnotations."container.apparmor.security.beta.kubernetes.io/threatstack-agent" | string | `"unconfined"` |  |
 | daemonset.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |

@@ -99,7 +99,7 @@ spec:
         securityContext:
           {{- toYaml .Values.apiReader.securityContext | nindent 10 }}
           capabilities:
-            add: {{ .Values.capabilities | trim }}
+            add: [{{ include "threatstack-agent.apireader-capabilities" . | trimSuffix ", " }}]
 {{- if .Values.apiReader.resources }}
         resources:
 {{ toYaml .Values.apiReader.resources | trim | indent 10 }}

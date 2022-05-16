@@ -19,6 +19,14 @@ spec:
       readOnly: false
     - pathPrefix: "/run/containerd/containerd.sock"
       readOnly: false
+{{- if .Values.ebpfEnabled }}
+    - pathPrefix: "/sys/kernel/debug"
+      readOnly: false
+    - pathPrefix: "/sys/fs/cgroup"
+      readOnly: false
+    - pathPrefix: "/sys/fs/bpf"
+      readOnly: false
+{{- end }}
   hostNetwork: true
   hostPID: true
   seLinux:
