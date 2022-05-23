@@ -115,6 +115,7 @@ spec:
         volumeMounts:
           - name: hostfs
             mountPath: /threatstackfs
+            readOnly: true
       volumes:
         - hostPath:
             path: /

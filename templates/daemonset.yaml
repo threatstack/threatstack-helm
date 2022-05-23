@@ -126,6 +126,7 @@ spec:
         volumeMounts:
           - name: hostfs
             mountPath: /threatstackfs
+            readOnly: true
 {{- if .Values.daemonset.customAuditRules }}
           - name: custom-audit-rules
             mountPath: /opt/threatstack/etc/audit-custom.rules
@@ -144,10 +145,6 @@ spec:
 {{- if .Values.ebpfEnabled }}
           - name: kernel-debug
             mountPath: /sys/kernel/debug
-          - name: cgroup
-            mountPath: /sys/fs/cgroup
-          - name: bpf
-            mountPath: /sys/fs/bpf
 {{- end }}
       volumes:
         - hostPath:
@@ -181,10 +178,4 @@ spec:
         - hostPath:
             path: /sys/kernel/debug
           name: kernel-debug
-        - hostPath:
-            path: /sys/fs/cgroup
-          name: cgroup
-        - hostPath:
-            path: /sys/fs/bpf
-          name: bpf
 {{- end }}
