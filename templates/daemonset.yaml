@@ -126,6 +126,7 @@ spec:
         volumeMounts:
           - name: hostfs
             mountPath: /threatstackfs
+            mountPropagation: HostToContainer
             readOnly: true
 {{- if .Values.daemonset.customAuditRules }}
           - name: custom-audit-rules
