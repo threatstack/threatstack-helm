@@ -3,7 +3,6 @@ Threat Stack Agent Helm Chart
 
 ![Release Version](https://img.shields.io/github/v/release/threatstack/threatstack-helm)
 
-
 ## Overview
 
 This project defines the helm chart to deploy the Threat Stack container agent in the recommended configuration for kubernetes.
@@ -32,8 +31,6 @@ The following kubernetes objects are created when the chart is installed:
 * A Secret to store [sensitive agent configuration](#additional-installation-notes), unless you [define your own secret](#using-the-agentsetupexternalsecretref-value-block)
 * A ConfigMap will be created to store the Threat Stack agent's setup and runtime configuration options.
 * Optionally a Pod Security Policy for clusters with strict pod admission control requirements.
-
-
 
 ## Values
 
