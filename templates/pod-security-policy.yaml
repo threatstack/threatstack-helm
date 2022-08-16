@@ -31,7 +31,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  allowedCapabilities: {{ .Values.capabilities | trim }}
+  allowedCapabilities: [{{ include "threatstack-agent.apireader-capabilities" . | trimSuffix ", " }}]
   allowedHostPaths:
     - pathPrefix: "/"
       readOnly: false
