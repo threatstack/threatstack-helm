@@ -115,14 +115,24 @@ Return runtime config if containerd is disabled
 {{- end -}}
 
 {{/*
-Return low-power config if setting is enabled
+Return Service Account Name if rbac is enabled
 */}}
-{{- define "threatstack-agent.daemonset-lowpower-config" -}}
-{{- if kindIs "invalid" .Values.daemonset.enableLowPowerMode -}}
+{{- define "threatstack-agent.serviceAccountName" -}}
+{{- if .Values.rbac.create -}}
+{{ include "threatstack-agent.name" . }}
 {{- else -}}
-{{- if eq .Values.daemonset.enableLowPowerMode false -}}
-{{- else -}}
-{{- default "--low_power=true" -}}
+{{ .Values.rbac.serviceAccountName }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return Additional Runtime Config for Daemonset
+*/}}
+{{- define "threatstack-agent.daemonset-RuntimeConfig" -}}
+{{- $runtimeConfig := list (include "threatstack-agent.docker-config" .) (include "threatstack-agent.containerd-config" .) (include "threatstack-agent.daemonset-ebpf-config" .) -}}
+{{- if .Values.daemonset.enableLowPowerMode -}}
+  {{- $runtimeConfig = append $runtimeConfig "low_power true" -}}
+{{- end -}}
+{{- $runtimeConfig = append $runtimeConfig .Values.daemonset.additionalRuntimeConfig -}}
+{{ $runtimeConfig | join " " }}
 {{- end -}}

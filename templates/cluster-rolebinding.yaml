@@ -35,5 +35,5 @@ roleRef:
   name: {{ include "threatstack-agent.name" .}}
 subjects: 
 - kind: ServiceAccount
-  name: {{ include "threatstack-agent.name" .}}
+  name: {{ include "threatstack-agent.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
