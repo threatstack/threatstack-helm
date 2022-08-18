@@ -51,6 +51,7 @@ eksAmazon2Cmd:
 #
 # Important:
 # Setting customDaemonsetCmd improperly can result in the Threat Stack Agent not running correctly.
+# This example turns off and disables auditd running on the host so the container agent can properly monitor activity
 customDaemonsetCmd: {}
   # command: ["bash"]
   # args: ["-c", "chroot /threatstackfs /bin/bash -c 'service auditd stop >/dev/null || systemctl stop auditd; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"]
