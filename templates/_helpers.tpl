@@ -80,7 +80,9 @@ Return eBPF configuration required if enabled
 */}}
 {{- define "threatstack-agent.daemonset-ebpf-config" -}}
 {{- if .Values.ebpfEnabled -}}
-{{- "enable_bpf_sensors 1" -}}
+{{- "enable_bpf_sensors true" -}}
+{{- else -}}
+{{- "enable_bpf_sensors false" -}}
 {{- end -}}
 {{- end -}}
 

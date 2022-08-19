@@ -59,7 +59,7 @@ The following kubernetes objects are created when the chart is installed:
 | daemonset.podAnnotations."container.apparmor.security.beta.kubernetes.io/threatstack-agent" | string | `"unconfined"` |  |
 | daemonset.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
 | daemonset.tolerations | list | `[]` |  |
-| ebpfEnabled | bool | `true` | Enables using ebpf-based monitoring where applicable. Defaults to `true` in chart versions 3.1.0+ |
+| ebpfEnabled | bool | `false` | Enables using ebpf-based monitoring where applicable. With some workloads, an increase in resource usage by the agent has been seen, so you may need to increase cpu and/or memory limits when enabling eBPF sensors |
 | eksAmazon2 | bool | `false` | If `true`, the Daemonset definition will be modified to execute commands for the agent to work correctly on EKS with Amazon Linux 2 nodes. Defaults to `false` |
 | eksAmazon2Cmd.args[0] | string | `"-c"` |  |
 | eksAmazon2Cmd.args[1] | string | `"chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"` |  |
