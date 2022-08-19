@@ -53,7 +53,8 @@ customDaemonsetCmd: {}
   # args: ["", ""]
 
 # Use ebpf monitoring where applicable
-# Enabling this setting has been observed to cause an increase in resource usage by the agent with some workloads
+# Enabling this setting has been observed to cause an increase in resource usage by the agent with some workloads,
+# so you may need to increase cpu and/or memory limits when enabling eBPF sensors
 ebpfEnabled: false
 
 ### Default values for threatstack-agent chart
