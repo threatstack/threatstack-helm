@@ -53,7 +53,8 @@ customDaemonsetCmd: {}
   # args: ["", ""]
 
 # Use ebpf monitoring where applicable
-ebpfEnabled: true
+# Enabling this setting has been observed to cause an increase in resource usage by the agent with some workloads
+ebpfEnabled: false
 
 ### Default values for threatstack-agent chart
 image:
