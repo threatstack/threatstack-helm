@@ -46,7 +46,7 @@ The following kubernetes objects are created when the chart is installed:
 | apiReader.podAnnotations | string | {} |  |
 | apiReader.priorityClassName | string | `""` | Optionally set the priority class name for the daemonset pods. Note that priority classes are not created via this helm chart. Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
 | capabilities | list | `["AUDIT_CONTROL", "SYS_ADMIN", "SYS_PTRACE", "SYS_NICE"]` | Docker capabilites required for the proper operation of the agent |
-| customDaemonsetCmd | object | `{}` | Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset. |
+| customDaemonsetCmd | object | `{}` | Uncomment the `command` and `args` sub-attributes, and define them as desired to run custom commands in the daemonset. **Important:** Setting `customDaemonsetCmd` improperly can result in the Threat Stack Agent not running correctly. |
 | daemonset.additionalRuntimeConfig | string | `"log.level info"` |  |
 | daemonset.affinity | object | `{}` |  |
 | daemonset.customAuditRules | string | `""` |  |
