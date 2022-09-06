@@ -87,6 +87,17 @@ Return eBPF configuration required if enabled
 {{- end -}}
 
 {{/*
+Return Low Power Mode configuration required if enabled
+*/}}
+{{- define "threatstack-agent.daemonset-lowPowerMode-config" -}}
+{{- if .Values.daemonset.enableLowPowerMode -}}
+{{- "low_power true" -}}
+{{- else -}}
+{{- "low_power false" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return runtime config if docker is disabled
 */}}
 {{- define "threatstack-agent.docker-config" -}}
@@ -128,11 +139,11 @@ Return Service Account Name if rbac is enabled
 {{/*
 Return Additional Runtime Config for Daemonset
 */}}
-{{- define "threatstack-agent.daemonset-RuntimeConfig" -}}
-{{- $runtimeConfig := list (include "threatstack-agent.docker-config" .) (include "threatstack-agent.containerd-config" .) (include "threatstack-agent.daemonset-ebpf-config" .) -}}
-{{- if .Values.daemonset.enableLowPowerMode -}}
-  {{- $runtimeConfig = append $runtimeConfig "low_power true" -}}
-{{- end -}}
+{{- define "threatstack-agent.daemonset-runtimeConfig" -}}
+{{- $runtimeConfig := list (include "threatstack-agent.docker-config" .) (include "threatstack-agent.containerd-config" .) -}}
+{{- $runtimeConfig = append $runtimeConfig (include "threatstack-agent.daemonset-lowPowerMode-config" .) -}}
+{{- $runtimeConfig = append $runtimeConfig (include "threatstack-agent.daemonset-ebpf-config" .) -}}
 {{- $runtimeConfig = append $runtimeConfig .Values.daemonset.additionalRuntimeConfig -}}
+
 {{ $runtimeConfig | join " " }}
 {{- end -}}
