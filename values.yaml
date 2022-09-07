@@ -33,19 +33,40 @@ imagePullSecrets: []
 gkeContainerOs: false
 gkeContainerOsCmd:
   command: ["bash"]
-  args: ["-c", "chroot /threatstackfs /bin/bash -c 'systemctl stop systemd-journald-audit.socket; systemctl mask systemd-journald-audit.socket; systemctl restart systemd-journald; auditctl --backlog_wait_time 0'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"]
+  args:
+    - -c
+    - >-
+        chroot /threatstackfs /bin/bash -c 'systemctl stop systemd-journald-audit.socket;
+        systemctl mask systemd-journald-audit.socket;
+        systemctl restart systemd-journald; auditctl --backlog_wait_time 0';
+        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
+        eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout
 
 # Using Ubuntu nodes
 gkeUbuntu: false
 gkeUbuntuCmd:
   command: ["bash"]
-  args: ["-c", "chroot /threatstackfs /bin/bash -c 'systemctl stop auditd; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"]
+  args:
+    - -c
+    - >-
+        chroot /threatstackfs /bin/bash -c 'systemctl stop auditd; systemctl disable auditd';
+        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
+        eval tsagent config --set $THREATSTACK_CONFIG_ARGS;
+        sleep 5;
+        /opt/threatstack/sbin/tsagentd -logstdout
 
 # Using EKS Amazon Linux 2 nodes
 eksAmazon2: false
 eksAmazon2Cmd:
   command: ["bash"]
-  args: ["-c", "chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"]
+  args:
+    - -c
+    - >-
+        chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd';
+        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
+        eval tsagent config --set $THREATSTACK_CONFIG_ARGS;
+        sleep 5;
+        /opt/threatstack/sbin/tsagentd -logstdout
 
 # Uncomment the command and args sub-attributes, and define them as desired to run custom commands in the Daemonset.
 #
@@ -54,7 +75,15 @@ eksAmazon2Cmd:
 # This example turns off and disables auditd running on the host so the container agent can properly monitor activity
 customDaemonsetCmd: {}
   # command: ["bash"]
-  # args: ["-c", "chroot /threatstackfs /bin/bash -c 'service auditd stop >/dev/null || systemctl stop auditd; systemctl disable auditd'; eval tsagent setup $THREATSTACK_SETUP_ARGS; eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout"]
+  # args:
+  #   - -c
+  #   - >-
+  #       chroot /threatstackfs /bin/bash -c 'service auditd stop >/dev/null || systemctl stop auditd;
+  #       systemctl disable auditd';
+  #       eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
+  #       eval tsagent config --set $THREATSTACK_CONFIG_ARGS;
+  #       sleep 5;
+  #       /opt/threatstack/sbin/tsagentd -logstdout
 
 # Use ebpf monitoring where applicable
 # Enabling this setting has been observed to cause an increase in resource usage by the agent with some workloads,

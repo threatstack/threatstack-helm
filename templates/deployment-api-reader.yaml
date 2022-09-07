@@ -102,17 +102,21 @@ spec:
           failureThreshold: 5
 {{- end }}
         env:
-          - name: THREATSTACK_SETUP_ARGS
+          - name: THREATSTACK_SETUP_DEPLOY_KEY
             valueFrom:
+              secretKeyRef:
 {{- if not .Values.agentSetupExternalSecretRef }}
-              secretKeyRef:
                 name: {{ include "threatstack-agent.fullname" . }}
-                key: ts-setup-args
+                key: ts-setup-deploy-key
 {{- else }}
-              secretKeyRef:
                 name: {{ .Values.agentSetupExternalSecretRef.name }}
                 key: {{ .Values.agentSetupExternalSecretRef.key }}
 {{- end }}
+          - name: THREATSTACK_SETUP_ARGS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "threatstack-agent.name" . }}-config-args
+                key: setup-args
           - name: THREATSTACK_CONFIG_ARGS
             valueFrom:
               configMapKeyRef:
