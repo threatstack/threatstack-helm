@@ -83,7 +83,7 @@ spec:
 {{- end }}
       hostNetwork: true
       hostPID: true
-      serviceAccountName: {{ if .Values.rbac.create }}{{ include "threatstack-agent.name" . }}{{ else }}{{ .Values.rbac.serviceAccountName }}{{ end }}
+      serviceAccountName: {{ include "threatstack-agent.serviceAccountName" . }}
       containers:
       - image: {{ .Values.image.repository }}:{{ if not .Values.image.version }}{{ .Chart.AppVersion }}{{ else }}{{ .Values.image.version }}{{ end }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
