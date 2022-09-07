@@ -32,6 +32,7 @@ metadata:
 data:
   config-args: {{ include "threatstack-agent.daemonset-runtimeConfig" . }}
   kubernetes-api-config-args: enable_kubes_master 1 {{ .Values.apiReader.additionalRuntimeConfig }}
+  setup-args: "--ruleset {{ .Values.rulesets | squote }} {{ .Values.additionalSetupConfig }}"
 {{- if .Values.daemonset.customAuditRules }}
   custom-audit-rules-content: {{ toYaml .Values.daemonset.customAuditRules | indent 4 }}
 {{- end }}
