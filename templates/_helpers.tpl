@@ -126,6 +126,20 @@ Return runtime config if containerd is disabled
 {{- end -}}
 
 {{/*
+Return runtime config if CRI-O is disabled
+*/}}
+{{- define "threatstack-agent.crio-config" -}}
+{{- if kindIs "invalid" .Values.daemonset.enableCrio -}}
+{{- else -}}
+{{- if eq .Values.daemonset.enableCrio false -}}
+{{- default "container_runtimes.crio.enabled false" -}}
+{{- else -}}
+{{- default "container_runtimes.crio.enabled true" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return Service Account Name if rbac is enabled
 */}}
 {{- define "threatstack-agent.serviceAccountName" -}}
@@ -140,7 +154,7 @@ Return Service Account Name if rbac is enabled
 Return Additional Runtime Config for Daemonset
 */}}
 {{- define "threatstack-agent.daemonset-runtimeConfig" -}}
-{{- $runtimeConfig := list (include "threatstack-agent.docker-config" .) (include "threatstack-agent.containerd-config" .) -}}
+{{- $runtimeConfig := list (include "threatstack-agent.docker-config" .) (include "threatstack-agent.containerd-config" .) (include "threatstack-agent.crio-config" .) -}}
 {{- $runtimeConfig = append $runtimeConfig (include "threatstack-agent.daemonset-lowPowerMode-config" .) -}}
 {{- $runtimeConfig = append $runtimeConfig (include "threatstack-agent.daemonset-ebpf-config" .) -}}
 {{- $runtimeConfig = append $runtimeConfig .Values.daemonset.additionalRuntimeConfig -}}

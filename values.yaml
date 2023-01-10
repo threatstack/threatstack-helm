@@ -229,6 +229,7 @@ daemonset:
   #
   # enableDocker: false
   # enableContainerd: false
+  # enableCrio: false
 
   # Enable low-power mode
   # Configures the daemonset agents to perform better in 

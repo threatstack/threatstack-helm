@@ -53,6 +53,7 @@ The following kubernetes objects are created when the chart is installed:
 | daemonset.customLuaFilter | string | `""` |  |
 | daemonset.customTsAuditdConfig | string | `""` |  |
 | daemonset.enableContainerd | bool | `unset` | Configures the daemonset agents to listen to the containerd daemon socket. **By default in agent 2.4.0+, the agent detects if containerd is running at startup**  |
+| daemonset.enableCrio | bool | `unset` | Configures the daemonset agents to listen to the CRI-O daemon socket. |
 | daemonset.enableDocker | bool | `unset` | Configures the daemonset agents to listen to the docker daemon socket. **By default in agent 2.4.0+, the agent detects if docker is running at startup** |
 | daemonset.enableLowPowerMode | bool | false | Configures the daemonset agents to perform better in tightly-resourced environments. The agent trades some telemetry reporting for reduced CPU and memory consumption. Ref: https://threatstack.zendesk.com/hc/en-us/articles/360016132692-Threat-Stack-Kubernetes-Deployment |
 | daemonset.nodeSelector | object | `{}` |  |
