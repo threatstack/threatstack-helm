@@ -89,15 +89,20 @@ spec:
         name: {{ include "threatstack-agent.name" . }}
 {{- if eq .Values.gkeContainerOs true }}
 {{ toYaml .Values.gkeContainerOsCmd | indent 8 }}
-{{- end }}
-{{- if eq .Values.gkeUbuntu true }}
+{{- else if eq .Values.gkeUbuntu true }}
 {{ toYaml .Values.gkeUbuntuCmd | indent 8 }}
-{{- end }}
-{{- if eq .Values.eksAmazon2 true }}
+{{- else if eq .Values.eksAmazon2 true }}
 {{ toYaml .Values.eksAmazon2Cmd | indent 8 }}
-{{- end }}
-{{- if .Values.customDaemonsetCmd }}
+{{- else if .Values.customDaemonsetCmd }}
 {{ toYaml .Values.customDaemonsetCmd | indent 8 }}
+{{- else }}
+        command: ["bash"]
+        args:
+          - -c
+          - >-
+              eval "tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS" &&
+              tsagent config --set $THREATSTACK_CONFIG_ARGS &&
+              exec /opt/threatstack/sbin/tsagentd -logstdout=1
 {{- end }}
 {{- if .Values.daemonset.livenessProbe }}
         livenessProbe:

@@ -38,22 +38,22 @@ gkeContainerOsCmd:
     - >-
         chroot /threatstackfs /bin/bash -c 'systemctl stop systemd-journald-audit.socket;
         systemctl mask systemd-journald-audit.socket;
-        systemctl restart systemd-journald; auditctl --backlog_wait_time 0';
-        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
-        eval tsagent config --set $THREATSTACK_CONFIG_ARGS; sleep 5; /opt/threatstack/sbin/tsagentd -logstdout
+        systemctl restart systemd-journald; auditctl --backlog_wait_time 0' &&
+        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS &&
+        eval tsagent config --set $THREATSTACK_CONFIG_ARGS && sleep 5 && exec /opt/threatstack/sbin/tsagentd -logstdout=1
 
 # Using Ubuntu nodes
-gkeUbuntu: false
+gkeUbuntu: true
 gkeUbuntuCmd:
   command: ["bash"]
   args:
     - -c
     - >-
-        chroot /threatstackfs /bin/bash -c 'systemctl stop auditd; systemctl disable auditd';
-        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
-        eval tsagent config --set $THREATSTACK_CONFIG_ARGS;
-        sleep 5;
-        /opt/threatstack/sbin/tsagentd -logstdout
+        chroot /threatstackfs /bin/bash -c 'systemctl stop auditd; systemctl disable auditd' &&
+        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS &&
+        eval tsagent config --set $THREATSTACK_CONFIG_ARGS &&
+        sleep 5 &&
+        exec /opt/threatstack/sbin/tsagentd -logstdout=1
 
 # Using EKS Amazon Linux 2 nodes
 eksAmazon2: false
@@ -62,18 +62,11 @@ eksAmazon2Cmd:
   args:
     - -c
     - >-
-        chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd';
-        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
-        eval tsagent config --set $THREATSTACK_CONFIG_ARGS;
-        sleep 5;
-        /opt/threatstack/sbin/tsagentd -logstdout
-
-# Using OpenShift
-#
-# If you are using OpenShift, and set this value to true, the Daemonset will increase it's memory limit to `1Gi`
-#
-# Important: Make sure to set the privileged attribute to `true` in the DaemonSet's securityContext configuration below
-openShift: false
+        chroot /threatstackfs /bin/bash -c 'service auditd stop; systemctl disable auditd' &&
+        eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS &&
+        eval tsagent config --set $THREATSTACK_CONFIG_ARGS &&
+        sleep 5 &&
+        exec /opt/threatstack/sbin/tsagentd -logstdout=1
 
 # Uncomment the command and args sub-attributes, and define them as desired to run custom commands in the Daemonset.
 #
@@ -91,6 +84,13 @@ customDaemonsetCmd: {}
   #       eval tsagent config --set $THREATSTACK_CONFIG_ARGS;
   #       sleep 5;
   #       /opt/threatstack/sbin/tsagentd -logstdout
+
+# Using OpenShift
+#
+# If you are using OpenShift, and set this value to true, the Daemonset will increase it's memory limit to `1Gi`
+#
+# Important: Make sure to set the privileged attribute to `true` in the DaemonSet's securityContext configuration below
+openShift: false
 
 # Use ebpf monitoring where applicable
 # Enabling this setting has been observed to cause an increase in resource usage by the agent with some workloads,
