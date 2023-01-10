@@ -70,8 +70,7 @@ eksAmazon2Cmd:
 
 # Using OpenShift
 #
-# If you are using OpenShift, and set this value to true, the Daemonset will increase it's memory limit to `1Gi`,
-# as well as setting the `privileged` attribute in the DaemonSet security context to `true`
+# If you are using OpenShift, and set this value to true, the Daemonset will increase it's memory limit to `1Gi`
 openShift: false
 
 # Uncomment the command and args sub-attributes, and define them as desired to run custom commands in the Daemonset.
