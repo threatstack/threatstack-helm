@@ -68,6 +68,12 @@ eksAmazon2Cmd:
         sleep 5;
         /opt/threatstack/sbin/tsagentd -logstdout
 
+# Using OpenShift
+#
+# If you are using OpenShift, and set this value to true, the Daemonset will increase it's memory limit to `1Gi`,
+# as well as setting the `privileged` attribute in the DaemonSet security context to `true`
+openShift: false
+
 # Uncomment the command and args sub-attributes, and define them as desired to run custom commands in the Daemonset.
 #
 # Important:
@@ -126,7 +132,6 @@ capabilities:
 #
 #####
 agentDeployKey: ""
-
 
 #####
 #

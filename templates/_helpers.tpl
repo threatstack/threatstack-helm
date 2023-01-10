@@ -76,6 +76,17 @@ Return capabilities required for api-reader pod
 {{- end -}}
 
 {{/*
+Return higher memory limit for agent if OpenShift is enabled
+*/}}
+{{- define "threatstack-agent.daemonset-openshift-default-memlimit" -}}
+{{- if .Values.openShift -}}
+{{- "1Gi" -}}
+{{- else -}}
+{{- "512Mi" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return eBPF configuration required if enabled
 */}}
 {{- define "threatstack-agent.daemonset-ebpf-config" -}}

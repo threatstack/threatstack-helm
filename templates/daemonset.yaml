@@ -146,7 +146,7 @@ spec:
             memory: "256Mi"
             cpu: "200m"
           limits:
-            memory: "512Mi"
+            memory: {{ include "threatstack-agent.daemonset-openshift-default-memlimit" . }}
             cpu: "400m"
 {{- end }}
         volumeMounts:
