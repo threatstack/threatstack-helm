@@ -89,7 +89,7 @@ customDaemonsetCmd: {}
   #       eval tsagent config --set $THREATSTACK_CONFIG_ARGS &&
   #       sleep 5 &&
   #       unset THREATSTACK_SETUP_DEPLOY_KEY THREATSTACK_SETUP_ARGS THREATSTACK_CONFIG_ARGS &&
-  #       /opt/threatstack/sbin/tsagentd -logstdout=1
+  #       exec /opt/threatstack/sbin/tsagentd -logstdout=1
 
 # Using OpenShift
 #
