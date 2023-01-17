@@ -94,7 +94,8 @@ spec:
           - >-
               eval "tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS" &&
               tsagent config --set $THREATSTACK_CONFIG_ARGS &&
-              exec /opt/threatstack/sbin/tsagentd -logstdout=1
+              exec /opt/threatstack/sbin/tsagentd -logstdout=1 &&
+              unset THREATSTACK_SETUP_DEPLOY_KEY THREATSTACK_SETUP_ARGS THREATSTACK_CONFIG_ARGS
 {{- if .Values.apiReader.livenessProbe }}
         livenessProbe:
 {{ toYaml .Values.apiReader.livenessProbe | indent 10 }}
