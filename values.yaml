@@ -43,7 +43,7 @@ gkeContainerOsCmd:
         eval tsagent config --set $THREATSTACK_CONFIG_ARGS && sleep 5 && exec /opt/threatstack/sbin/tsagentd -logstdout=1
 
 # Using Ubuntu nodes
-gkeUbuntu: true
+gkeUbuntu: false
 gkeUbuntuCmd:
   command: ["bash"]
   args:
@@ -79,11 +79,11 @@ customDaemonsetCmd: {}
   #   - -c
   #   - >-
   #       chroot /threatstackfs /bin/bash -c 'service auditd stop >/dev/null || systemctl stop auditd;
-  #       systemctl disable auditd';
-  #       eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS;
-  #       eval tsagent config --set $THREATSTACK_CONFIG_ARGS;
-  #       sleep 5;
-  #       /opt/threatstack/sbin/tsagentd -logstdout
+  #       systemctl disable auditd' &&
+  #       eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS &&
+  #       eval tsagent config --set $THREATSTACK_CONFIG_ARGS &&
+  #       sleep 5 &&
+  #       /opt/threatstack/sbin/tsagentd -logstdout=1
 
 # Using OpenShift
 #
