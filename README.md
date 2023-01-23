@@ -53,6 +53,7 @@ The following kubernetes objects are created when the chart is installed:
 | daemonset.customLuaFilter | string | `""` |  |
 | daemonset.customTsAuditdConfig | string | `""` |  |
 | daemonset.enableContainerd | bool | `unset` | Configures the daemonset agents to listen to the containerd daemon socket. **By default in agent 2.4.0+, the agent detects if containerd is running at startup**  |
+| daemonset.enableCrio | bool | `unset` | Configures the daemonset agents to listen to the CRI-O daemon socket. |
 | daemonset.enableDocker | bool | `unset` | Configures the daemonset agents to listen to the docker daemon socket. **By default in agent 2.4.0+, the agent detects if docker is running at startup** |
 | daemonset.enableLowPowerMode | bool | false | Configures the daemonset agents to perform better in tightly-resourced environments. The agent trades some telemetry reporting for reduced CPU and memory consumption. Ref: https://threatstack.zendesk.com/hc/en-us/articles/360016132692-Threat-Stack-Kubernetes-Deployment |
 | daemonset.nodeSelector | object | `{}` |  |
@@ -78,6 +79,7 @@ The following kubernetes objects are created when the chart is installed:
 | image.version | string | `""` | The docker tag for the container image to install. It defaults to Threat Stack's latest offical docker image version for the agent at the time the chart was released. **NOTE:** Changing this could lead to pulling an unofficial, incorrect, or incompatible image, and is strongly discouraged. >>> **Warning:** Setting `customDaemonsetCmd` improperly can result in the Threat Stack agent not running correctly >>> |
 | imagePullSecrets | list | `[]` | If pulling the agent from a private/internal docker registry that requires credentials, you will need to add the name of your docker credentials secret to this array. *This secret needs to be defined outside of installing this helm chart.* Defaults to an empty array which will only work with public registries. * For more guidance with using private container registries, please review the following kubernetes documentation for details around how to set this upcorrectly with your registry service: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line https://kubernetes.io/docs/concepts/containers/images/#using-a-private-registry |
 | nameOverride | string | `""` |  |
+| openShift | bool | `false` | If `true`, the default memory limit for the daemonset agent pods will be increased to `1Gi`, as OpenShift appears to require more memory for the agent to work properly. |
 | podSecurityPolicyEnabled | bool | `false` | Deploy Threat Stack with the Pod Security Policy for clusters with strict admission control requirements. |
 | rbac.create | bool | `true` | If `true`, will create the needed service account to run. If false, the chart will leverage the service account defined in `rbac.serviceAccountName` |
 | rbac.serviceAccountName | string | `"threatstack-agent"` |  |

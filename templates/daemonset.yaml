@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2020-2022 F5, Inc.
+# Copyright (c) 2020-2023 F5, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -89,15 +89,21 @@ spec:
         name: {{ include "threatstack-agent.name" . }}
 {{- if eq .Values.gkeContainerOs true }}
 {{ toYaml .Values.gkeContainerOsCmd | indent 8 }}
-{{- end }}
-{{- if eq .Values.gkeUbuntu true }}
+{{- else if eq .Values.gkeUbuntu true }}
 {{ toYaml .Values.gkeUbuntuCmd | indent 8 }}
-{{- end }}
-{{- if eq .Values.eksAmazon2 true }}
+{{- else if eq .Values.eksAmazon2 true }}
 {{ toYaml .Values.eksAmazon2Cmd | indent 8 }}
-{{- end }}
-{{- if .Values.customDaemonsetCmd }}
+{{- else if .Values.customDaemonsetCmd }}
 {{ toYaml .Values.customDaemonsetCmd | indent 8 }}
+{{- else }}
+        command: ["bash"]
+        args:
+          - -c
+          - >-
+              eval "tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS" &&
+              tsagent config --set $THREATSTACK_CONFIG_ARGS &&
+              unset THREATSTACK_SETUP_DEPLOY_KEY THREATSTACK_SETUP_ARGS THREATSTACK_CONFIG_ARGS &&
+              exec /opt/threatstack/sbin/tsagentd -logstdout=1
 {{- end }}
 {{- if .Values.daemonset.livenessProbe }}
         livenessProbe:
@@ -146,7 +152,7 @@ spec:
             memory: "256Mi"
             cpu: "200m"
           limits:
-            memory: "512Mi"
+            memory: {{ include "threatstack-agent.daemonset-openshift-default-memlimit" . }}
             cpu: "400m"
 {{- end }}
         volumeMounts:

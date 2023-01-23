@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2020-2022 F5, Inc.
+# Copyright (c) 2020-2023 F5, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 #######
 apiVersion: v1
 name: threatstack-agent
-version: 3.1.1
-appVersion: 3.1.1
+version: 3.2.0
+appVersion: 3.2.0
 description: A Helm chart for the Threat Stack Cloud Security Agent
 keywords:
 - security

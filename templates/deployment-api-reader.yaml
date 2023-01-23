@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2020-2022 F5, Inc.
+# Copyright (c) 2020-2023 F5, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -88,13 +88,21 @@ spec:
       - image: {{ .Values.image.repository }}:{{ if not .Values.image.version }}{{ .Chart.AppVersion }}{{ else }}{{ .Values.image.version }}{{ end }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: {{ include "threatstack-agent.name" . }}
+        command: ["bash"]
+        args:
+          - -c
+          - >-
+              eval "tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS" &&
+              tsagent config --set $THREATSTACK_CONFIG_ARGS &&
+              unset THREATSTACK_SETUP_DEPLOY_KEY THREATSTACK_SETUP_ARGS THREATSTACK_CONFIG_ARGS &&
+              exec /opt/threatstack/sbin/tsagentd -logstdout=1
 {{- if .Values.apiReader.livenessProbe }}
         livenessProbe:
 {{ toYaml .Values.apiReader.livenessProbe | indent 10 }}
 {{- else }}
         livenessProbe:
           exec:
-            command: [ "sh", "-c", "tsagent status" ]
+            command: [ "bash", "-c", "tsagent status" ]
           initialDelaySeconds: 15
           periodSeconds: 360
           timeoutSeconds: 5
