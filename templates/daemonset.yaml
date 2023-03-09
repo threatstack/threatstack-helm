@@ -100,7 +100,7 @@ spec:
         args:
           - -c
           - >-
-              eval "tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS" &&
+              eval tsagent setup --deploy-key $THREATSTACK_SETUP_DEPLOY_KEY $THREATSTACK_SETUP_ARGS &&
               tsagent config --set $THREATSTACK_CONFIG_ARGS &&
               unset THREATSTACK_SETUP_DEPLOY_KEY THREATSTACK_SETUP_ARGS THREATSTACK_CONFIG_ARGS &&
               exec /opt/threatstack/sbin/tsagentd -logstdout=1
